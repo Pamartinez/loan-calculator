@@ -34,13 +34,18 @@ jobs:
             - name: Build
               run: npm run build
 
+            - name: Prepare deployment directory
+              run: |
+                  mkdir -p deploy/loan-calculator
+                  cp -r www/* deploy/loan-calculator/
+
             - name: Setup Pages
               uses: actions/configure-pages@v4
 
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
               with:
-                  path: ./www/loan-calculator
+                  path: ./deploy
 
     deploy:
         environment:
