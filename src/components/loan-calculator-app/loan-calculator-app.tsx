@@ -17,14 +17,53 @@ export class LoanCalculatorApp {
     'current-loan-id': {
       id: 'current-loan-id',
       displayName: 'Current Loan',
-      loanAmount: 474000.00,
+      loanAmount: 474000,
       rate: 7,
       totalMonthlyPayment: 3913.45,
       escrow: 739.9,
       additionalPrincipal: 0,
       startDate: '2023-07',
       canBeDeleted: false,
-      summaryTabSelected: 0
+      loanTermsTime: 30
+    },
+    'loan-1763889304119-jefb3qmtp': {
+      id: 'loan-1763889304119-jefb3qmtp',
+      displayName: 'Valon A',
+      loanAmount: 467000,
+      rate: 5.875,
+      totalMonthlyPayment: 3502,
+      escrow: 739.92,
+      additionalPrincipal: 411.45,
+      startDate: '2025-12',
+      canBeDeleted: true,
+      summaryTabSelected: 0,
+      loanTermsTime: 30
+    },
+    'loan-1763889679372-bed31br2v': {
+      id: 'loan-1763889679372-bed31br2v',
+      displayName: 'Valon B',
+      loanAmount: 467000,
+      rate: 5.99,
+      totalMonthlyPayment: 3536,
+      escrow: 739.92,
+      additionalPrincipal: 377.45,
+      startDate: '2025-12',
+      canBeDeleted: true,
+      summaryTabSelected: 0,
+      loanTermsTime: 30
+    },
+    'loan-1763891483798-pxe01qzbi': {
+      id: 'loan-1763891483798-pxe01qzbi',
+      displayName: 'Loan Depot',
+      loanAmount: 473000,
+      rate: 5.99,
+      totalMonthlyPayment: 3572.75,
+      escrow: 739.92,
+      additionalPrincipal: 340.7,
+      startDate: '2025-12',
+      canBeDeleted: true,
+      summaryTabSelected: 0,
+      loanTermsTime: 30
     }
   };
 
