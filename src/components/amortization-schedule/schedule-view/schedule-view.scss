@@ -1,0 +1,94 @@
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+
+  @media print {
+    margin-top: 3px;
+    margin-bottom: 0;
+    font-size: 11px;
+
+    thead {
+      display: table-header-group;
+    }
+
+    tfoot {
+      display: table-footer-group;
+    }
+  }
+}
+
+.table-header {
+  border-bottom: 2px solid #333;
+  background-color: #f8f9fa;
+
+  @media print {
+    background-color: #f8f9fa !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  th {
+    padding: 8px;
+    text-align: left;
+    font-weight: 600;
+
+    @media print {
+      padding: 4px 3px;
+      font-size: 10px;
+    }
+
+    &.text-right {
+      text-align: right;
+    }
+  }
+}
+
+.table-row {
+  border-bottom: 1px solid #ddd;
+
+  @media print {
+    page-break-inside: avoid;
+
+    &:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  }
+
+  td {
+    padding: 8px;
+
+    @media print {
+      padding: 3px 3px;
+    }
+
+    &.text-right {
+      text-align: right;
+    }
+  }
+}
+
+.table-footer {
+  border-top: 2px solid #333;
+  font-weight: bold;
+  background-color: #e9ecef;
+
+  @media print {
+    page-break-inside: avoid;
+    background-color: #e9ecef !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  td {
+    padding: 8px;
+
+    @media print {
+      padding: 4px 3px;
+    }
+
+    &.text-right {
+      text-align: right;
+    }
+  }
+}

@@ -1,0 +1,45 @@
+.summary-section {
+  margin-top: 24px;
+  padding: 0px 20px 0px 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  @media print {
+    page-break-inside: avoid;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px 15px;
+    background: #f5f7fa !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    box-shadow: none;
+  }
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+
+  @media print {
+    padding: 8px 0;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .summary-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .summary-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2937;
+  }
+}

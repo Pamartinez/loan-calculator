@@ -1,0 +1,58 @@
+.display-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: #212529;
+  margin: 0 0 15px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #007bff;
+}
+
+// Responsive styles
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  height: 44px;
+}
+
+.button-style {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus {
+    outline: 2px solid #0056b3;
+    outline-offset: 2px;
+  }
+}
+
+.button-style-delete {
+  background-color: #dc3545;
+
+  &:hover {
+    background-color: #c82333;
+  }
+
+  &:active {
+    background-color: #bd2130;
+  }
+
+  &:focus {
+    outline-color: #c82333;
+  }
+}

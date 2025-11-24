@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+.input-style {
+  border: 0.8px solid rgb(149, 149, 149);
+  border-radius: 4px;
+  cursor: text;
+  appearance: auto;
+  text-rendering: auto;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  width: var(--input-width, $min-input-width);
+
+  &:focus {
+    outline: none;
+    box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px, rgb(0, 91, 168) 0px 0px 0px 4px;
+  }
+
+  &.red-border {
+    border-color: $danger-500;
+
+    &:focus {
+      box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px, $danger-500 0px 0px 0px 4px;
+    }
+  }
+}

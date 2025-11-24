@@ -1,0 +1,113 @@
+.loan-report {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  color: #333;
+
+  @media print {
+    padding: 0;
+    max-width: 100%;
+  }
+}
+
+.report-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.report-date {
+  text-align: center;
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 14px;
+
+  @media print {
+    margin-bottom: 10px;
+  }
+}
+
+.loan-section {
+  margin-bottom: 40px;
+
+  @media print {
+    margin-bottom: 10px;
+  }
+
+  &:not(:last-child) {
+    page-break-after: always;
+  }
+}
+
+.loan-details {
+  page-break-inside: avoid;
+}
+
+.loan-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #007bff;
+  color: #007bff;
+
+  @media print {
+    margin: 0 0 10px 0;
+    padding-bottom: 5px;
+    page-break-after: avoid;
+  }
+}
+
+.schedule-section {
+  margin-top: 30px;
+
+  @media print {
+    margin-top: 5px;
+    margin-bottom: 3px;
+  }
+}
+
+.schedule-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+  color: #444;
+  page-break-after: avoid;
+  page-break-before: auto;
+
+  @media print {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+  }
+}
+
+.page-break {
+  page-break-before: always;
+}
+
+@media print {
+  .loan-section {
+    page-break-after: always;
+
+    &:last-child {
+      page-break-after: auto;
+    }
+  }
+
+  .loan-details {
+    page-break-inside: avoid;
+  }
+
+  .schedule-title,
+  .loan-title {
+    page-break-after: avoid;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+}

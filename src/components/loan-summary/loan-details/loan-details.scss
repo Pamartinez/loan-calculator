@@ -1,0 +1,43 @@
+.loan-summary {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  @media print {
+    page-break-inside: avoid;
+    margin-top: 0;
+    margin-bottom: 5px;
+    padding: 6px;
+    background-color: #f8f9fa !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px solid #e9ecef;
+
+  @media print {
+    padding: 2px 0;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.summary-label {
+  font-weight: 500;
+  color: #495057;
+}
+
+.summary-value {
+  font-weight: 600;
+  color: #212529;
+}
