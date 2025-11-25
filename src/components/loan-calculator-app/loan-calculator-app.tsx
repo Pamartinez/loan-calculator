@@ -23,7 +23,6 @@ export class LoanCalculatorApp {
       escrow: 739.9,
       additionalPrincipal: 0,
       startDate: '2023-07',
-      canBeDeleted: false,
       loanTermsTime: 30
     },
     'loan-1763889304119-jefb3qmtp': {
@@ -35,7 +34,6 @@ export class LoanCalculatorApp {
       escrow: 739.92,
       additionalPrincipal: 411.45,
       startDate: '2025-12',
-      canBeDeleted: true,
       summaryTabSelected: 0,
       loanTermsTime: 30
     },
@@ -48,20 +46,6 @@ export class LoanCalculatorApp {
       escrow: 739.92,
       additionalPrincipal: 411.45,
       startDate: '2025-12',
-      canBeDeleted: true,
-      summaryTabSelected: 0,
-      loanTermsTime: 30
-    },
-    'loan-1763889679372-bed31br2v22': {
-      id: 'loan-1763889679372-bed31br2v',
-      displayName: 'Valon B',
-      loanAmount: 467000,
-      rate: 5.775,
-      totalMonthlyPayment: 3502,
-      escrow: 739.92,
-      additionalPrincipal: 411.45,
-      startDate: '2025-12',
-      canBeDeleted: true,
       summaryTabSelected: 0,
       loanTermsTime: 30
     },
@@ -74,7 +58,6 @@ export class LoanCalculatorApp {
       escrow: 739.92,
       additionalPrincipal: 340.7,
       startDate: '2025-12',
-      canBeDeleted: true,
       summaryTabSelected: 0,
       loanTermsTime: 30
     }
@@ -158,7 +141,6 @@ export class LoanCalculatorApp {
       escrow: 739.92,
       additionalPrincipal: 0,
       startDate: defaultStartDate,
-      canBeDeleted: true,
       summaryTabSelected: 0,
       loanTermsTime: 30,
       loanTermsType: 'years'

@@ -24,7 +24,6 @@ export class LoanCalculator {
         escrow: 739.92,
         additionalPrincipal: 0,
         startDate: null,
-        canBeDeleted: true,
         loanTermsTime: 30,
         loanTermsType: 'years'
     };

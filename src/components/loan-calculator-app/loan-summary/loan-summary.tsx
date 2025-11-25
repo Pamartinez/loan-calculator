@@ -50,11 +50,14 @@ export class LoanSummary {
     return (
       <div>
         <div class="action-buttons">
-          {this.loanData.canBeDeleted && (
-            <button class="button-style button-style-delete" onClick={this.handleDelete}>
-              Delete
-            </button>
-          )}
+          <button
+            class="button-style button-style-delete"
+            onClick={this.handleDelete}
+            aria-label="Delete loan"
+            title="Delete this loan"
+          >
+            Delete Loan
+          </button>
         </div>
         <loan-details loanData={this.loanData} />
 

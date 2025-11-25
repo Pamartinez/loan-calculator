@@ -13,7 +13,6 @@ export interface LoanFormData {
   escrow: number;
   additionalPrincipal: number;
   startDate?: string;
-  canBeDeleted: boolean | true;
   summaryTabSelected?: number;
   loanTermsTime?: number;
   loanTermsType?: 'years' | 'months';

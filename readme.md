@@ -191,7 +191,6 @@ interface LoanFormData {
   escrow?: number;
   additionalPrincipal?: number;
   startDate: string | null; // Format: 'YYYY-MM'
-  canBeDeleted?: boolean;
   loanTermsTime?: number;
   loanTermsType?: 'years' | 'months';
   summaryTabSelected?: number;

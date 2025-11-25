@@ -16,7 +16,6 @@ export class LoanAmortizationCalculator {
         escrow: 739.9,
         additionalPrincipal: 0,
         startDate: '2023-07',
-        canBeDeleted: false,
         loanTermsTime: 30
     };
     @State() amortizationEntries: AmortizationData[] = [
