@@ -18,6 +18,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
+  background-color: #fafbfc;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -30,36 +31,43 @@
 }
 
 .metric-card {
-  background: #f8f9fa;
+  background: #ffffff;
   border-radius: 8px;
-  padding: 16px;
-  border: 1px solid #e0e0e0;
-  transition: transform 0.2s, box-shadow 0.2s;
+  padding: 20px;
+  border: 1px solid #e8eaed;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: all 0.25s ease;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    border-color: #c5c9cc;
   }
 
   &.highlight-card {
     background: #e7f5ff;
     border-color: #339af0;
+    box-shadow: 0 2px 6px rgba(51, 154, 240, 0.15);
+
+    &:hover {
+      box-shadow: 0 6px 16px rgba(51, 154, 240, 0.25);
+    }
   }
 }
 
 .metric-label {
-  font-size: 12px;
-  color: #666;
+  font-size: 11px;
+  color: #6c757d;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
   margin-bottom: 8px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .metric-value {
-  font-size: 20px;
-  font-weight: 700;
-  color: #333;
+  font-size: 24px;
+  font-weight: 800;
+  color: #212529;
 
   &.highlight-red {
     color: #dc3545;

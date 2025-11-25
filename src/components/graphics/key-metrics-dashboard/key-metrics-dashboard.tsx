@@ -1,5 +1,6 @@
 import { Component, h, Prop } from '@stencil/core';
-import { LoanFormData } from '../../../data/models';
+import { LoanFormData, AmortizationRow } from '../../../data/models';
+import { formatCurrency } from '../../../utils/utils';
 import { calculateAmortization } from '../../../utils/amortization';
 
 @Component({
@@ -9,15 +10,7 @@ import { calculateAmortization } from '../../../utils/amortization';
 })
 export class KeyMetricsDashboard {
   @Prop() loanData: LoanFormData;
-
-  private formatCurrency(value: number): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  }
+  @Prop() schedule: AmortizationRow[] = [];
 
   private formatDate(yearMonth: string): string {
     if (!yearMonth) return 'N/A';
@@ -33,15 +26,12 @@ export class KeyMetricsDashboard {
       return null;
     }
 
-    const standardSchedule = calculateAmortization({ ...this.loanData, additionalPrincipal: 0 });
-    const withAdditionalSchedule = this.loanData.additionalPrincipal > 0
-      ? calculateAmortization(this.loanData)
-      : null;
+    const standardSchedule = calculateAmortization({ ...this.loanData, additionalPrincipal: 0 }, []);
+    const activeSchedule = this.schedule.length > 0 ? this.schedule : standardSchedule;
 
     const totalInterestStandard = standardSchedule.reduce((sum, row) => sum + row.interest, 0);
 
-    // Use the schedule with additional principal if it exists for total paid calculation
-    const activeSchedule = withAdditionalSchedule || standardSchedule;
+    // Use the passed schedule for total paid calculation
     const totalInterest = activeSchedule.reduce((sum, row) => sum + row.interest, 0);
     const totalPrincipal = activeSchedule.reduce((sum, row) => sum + row.principal + row.additionalPrincipal, 0);
     const totalPaid = totalPrincipal + totalInterest;
@@ -57,13 +47,19 @@ export class KeyMetricsDashboard {
     let timeSaved = 0;
     let payoffDateWithAdditional = payoffDateStr;
 
-    if (withAdditionalSchedule) {
-      const totalInterestWithAdditional = withAdditionalSchedule.reduce((sum, row) => sum + row.interest, 0);
+    const hasAdditional = this.loanData.additionalPrincipal > 0 ||
+      activeSchedule.some(row => row.additionalPrincipal > 0);
+
+    // Calculate total additional principal payments
+    const totalAdditionalPrincipal = activeSchedule.reduce((sum, row) => sum + row.additionalPrincipal, 0);
+
+    if (hasAdditional) {
+      const totalInterestWithAdditional = activeSchedule.reduce((sum, row) => sum + row.interest, 0);
       interestSaved = totalInterestStandard - totalInterestWithAdditional;
-      timeSaved = standardSchedule.length - withAdditionalSchedule.length;
+      timeSaved = standardSchedule.length - activeSchedule.length;
 
       const payoffWithAdditional = new Date(startDate);
-      payoffWithAdditional.setFullYear(payoffWithAdditional.getFullYear() + withAdditionalSchedule.length);
+      payoffWithAdditional.setFullYear(payoffWithAdditional.getFullYear() + activeSchedule.length);
       payoffDateWithAdditional = payoffWithAdditional.toISOString().substring(0, 7);
     }
 
@@ -77,15 +73,16 @@ export class KeyMetricsDashboard {
       monthlyPayment: monthlyPrincipalInterest,
       totalMonthlyPayment: this.loanData.totalMonthlyPayment,
       escrow: this.loanData.escrow || 0,
-      payoffDate: withAdditionalSchedule ? payoffDateWithAdditional : payoffDateStr,
+      payoffDate: hasAdditional ? payoffDateWithAdditional : payoffDateStr,
       yearsToPayoff: activeSchedule.length,
       effectiveRate,
       percentPaid,
       interestSaved,
       timeSaved,
       payoffDateWithAdditional,
-      hasAdditional: this.loanData.additionalPrincipal > 0,
+      hasAdditional,
       additionalPrincipal: this.loanData.additionalPrincipal,
+      totalAdditionalPrincipal,
     };
   }
 
@@ -97,13 +94,13 @@ export class KeyMetricsDashboard {
     }
 
     return (
-      <div class="metrics-dashboard">
+      <div class="metrics-dashboard section">
         <h3 class="dashboard-title">Loan Summary</h3>
 
         <div class="metrics-grid">
           <div class="metric-card">
             <div class="metric-label">Loan Amount</div>
-            <div class="metric-value">{this.formatCurrency(metrics.loanAmount)}</div>
+            <div class="metric-value">{formatCurrency(metrics.loanAmount)}</div>
           </div>
 
           <div class="metric-card">
@@ -113,27 +110,27 @@ export class KeyMetricsDashboard {
 
           <div class="metric-card">
             <div class="metric-label">Total Interest</div>
-            <div class="metric-value highlight-red">{this.formatCurrency(metrics.totalInterest)}</div>
+            <div class="metric-value highlight-red">{formatCurrency(metrics.totalInterest)}</div>
           </div>
 
           <div class="metric-card">
             <div class="metric-label">Total Amount Paid</div>
-            <div class="metric-value">{this.formatCurrency(metrics.totalPaid)}</div>
+            <div class="metric-value">{formatCurrency(metrics.totalPaid)}</div>
           </div>
 
           <div class="metric-card">
             <div class="metric-label">Monthly P&I Payment</div>
-            <div class="metric-value">{this.formatCurrency(metrics.monthlyPayment)}</div>
+            <div class="metric-value">{formatCurrency(metrics.monthlyPayment)}</div>
           </div>
 
           <div class="metric-card">
             <div class="metric-label">Monthly Escrow</div>
-            <div class="metric-value">{this.formatCurrency(metrics.escrow)}</div>
+            <div class="metric-value">{formatCurrency(metrics.escrow)}</div>
           </div>
 
           <div class="metric-card">
             <div class="metric-label">Total Monthly Payment</div>
-            <div class="metric-value highlight-blue">{this.formatCurrency(metrics.totalMonthlyPayment)}</div>
+            <div class="metric-value highlight-blue">{formatCurrency(metrics.totalMonthlyPayment)}</div>
           </div>
 
           <div class="metric-card">
@@ -146,17 +143,24 @@ export class KeyMetricsDashboard {
             <div class="metric-value">{this.formatDate(metrics.payoffDate)}</div>
           </div>
 
-          {metrics.hasAdditional && (
+          {metrics.hasAdditional && this.loanData.additionalPrincipal > 0 && (
             <div class="metric-card highlight-card">
               <div class="metric-label">Additional Principal</div>
-              <div class="metric-value">{this.formatCurrency(metrics.additionalPrincipal)}/month</div>
+              <div class="metric-value">{formatCurrency(metrics.additionalPrincipal)}/month</div>
+            </div>
+          )}
+
+          {metrics.hasAdditional && (
+            <div class="metric-card highlight-card">
+              <div class="metric-label">Total Additional Principal</div>
+              <div class="metric-value highlight-green">{formatCurrency(metrics.totalAdditionalPrincipal)}</div>
             </div>
           )}
 
           {metrics.hasAdditional && metrics.interestSaved > 0 && (
             <div class="metric-card highlight-card">
               <div class="metric-label">Interest Saved</div>
-              <div class="metric-value highlight-green">{this.formatCurrency(metrics.interestSaved)}</div>
+              <div class="metric-value highlight-green">{formatCurrency(metrics.interestSaved)}</div>
             </div>
           )}
 

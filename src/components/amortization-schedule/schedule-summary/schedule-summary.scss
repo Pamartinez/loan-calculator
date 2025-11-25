@@ -1,15 +1,15 @@
 .summary-section {
-  margin-top: 24px;
-  padding: 0px 20px 0px 20px;
+  margin: 20px 0;
+  padding: 20px;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   border-radius: 8px;
+  border: 1px solid #e0e0e0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
   @media print {
     page-break-inside: avoid;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 5px 15px;
+    margin: 15px 0;
+    padding: 15px;
     background: #f5f7fa !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;

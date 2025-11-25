@@ -1,4 +1,4 @@
-import { Component, h, Prop, State, VNode, Watch, Event, EventEmitter } from '@stencil/core';
+import { Component, h, Prop, State, VNode, Event, EventEmitter } from '@stencil/core';
 
 export interface TabItem {
   name: string;
@@ -21,13 +21,6 @@ export class TabsController {
   componentWillLoad() {
     if (this.defaultActiveIndex !== undefined && this.defaultActiveIndex >= 0 && this.defaultActiveIndex < this.tabs.length) {
       this.activeTabIndex = this.defaultActiveIndex;
-    }
-  }
-
-  @Watch('defaultActiveIndex')
-  handleDefaultActiveIndexChange(newValue: number) {
-    if (newValue !== undefined && newValue >= 0 && newValue < this.tabs.length) {
-      this.activeTabIndex = newValue;
     }
   }
 

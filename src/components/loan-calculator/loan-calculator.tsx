@@ -8,6 +8,7 @@ import { LoanFormData, NumericInputTypeEnum } from '../../data/models';
 })
 export class LoanCalculator {
     @Prop() initialFormData?: LoanFormData;
+    @Prop() hideAdditionalPrincipal?: boolean = false;
 
     @Event() formValidityChange: EventEmitter<boolean>;
     @Event() formSubmit: EventEmitter<LoanFormData>;
@@ -145,7 +146,7 @@ export class LoanCalculator {
 
                     {/* Third Row - Additional Principal and Loan Terms */}
                     <div class="form-row">
-                        {this.renderNumberInput('Additional Principal', 'additionalPrincipal', '$')}
+                        {!this.hideAdditionalPrincipal && this.renderNumberInput('Additional Principal', 'additionalPrincipal', '$')}
                         <div class="form-group">
                             <label htmlFor="loanTerms">Loan Terms</label>
                             <div class="input-wrapper" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -179,18 +180,10 @@ export class LoanCalculator {
                         <div class="form-group">
                             <label htmlFor="startDate">Start Date</label>
                             <div class="input-wrapper">
-                                <input
-                                    type="month"
-                                    id="startDate"
-                                    class="input-style"
+                                <date-input
                                     value={this.formData.startDate || ''}
-                                    onInput={(e) => this.handleValueChange('startDate', (e.target as HTMLInputElement).value)}
-                                    onKeyDown={(e) => {
-                                        const allowedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab'];
-                                        if (!allowedKeys.includes(e.key)) {
-                                            e.preventDefault();
-                                        }
-                                    }}
+                                    inputId="startDate"
+                                    onDateChange={(e) => this.handleValueChange('startDate', e.detail)}
                                 />
                             </div>
                         </div>
@@ -199,7 +192,24 @@ export class LoanCalculator {
                                 class={`button-style ${this.isEditMode ? 'button-style-edit' : 'button-style-add'}`}
                                 onClick={() => this.handleAddClick()}
                             >
-                                {this.isEditMode ? 'Edit' : 'Add'}
+                                {this.isEditMode ? (
+                                    <span class="button-content">
+                                        <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                        Edit
+                                    </span>
+                                ) : (
+                                    <span class="button-content">
+                                        <svg class="add-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                                        </svg>
+                                        Add
+                                    </span>
+                                )}
                             </button>
                         </div>
                     </div>

@@ -43,10 +43,23 @@ export class LoanCalculatorApp {
       id: 'loan-1763889679372-bed31br2v',
       displayName: 'Valon B',
       loanAmount: 467000,
-      rate: 5.99,
-      totalMonthlyPayment: 3536,
+      rate: 5.775,
+      totalMonthlyPayment: 3502,
       escrow: 739.92,
-      additionalPrincipal: 377.45,
+      additionalPrincipal: 411.45,
+      startDate: '2025-12',
+      canBeDeleted: true,
+      summaryTabSelected: 0,
+      loanTermsTime: 30
+    },
+    'loan-1763889679372-bed31br2v22': {
+      id: 'loan-1763889679372-bed31br2v',
+      displayName: 'Valon B',
+      loanAmount: 467000,
+      rate: 5.775,
+      totalMonthlyPayment: 3502,
+      escrow: 739.92,
+      additionalPrincipal: 411.45,
       startDate: '2025-12',
       canBeDeleted: true,
       summaryTabSelected: 0,
@@ -213,7 +226,15 @@ export class LoanCalculatorApp {
 
             <div class="new-loan-container">
               <button class="button-style" onClick={this.handleNewLoan}>
-                New Loan
+                <span class="button-content">
+                  <svg class="new-loan-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                  </svg>
+                  New Loan
+                </span>
               </button>
               <button class="button-style pdf-export-button" onClick={this.handleExportToPdf} disabled={this.isExporting}>
                 {this.isExporting ? (
@@ -222,7 +243,14 @@ export class LoanCalculatorApp {
                     Preparing PDF...
                   </span>
                 ) : (
-                  'Export to PDF'
+                  <span class="button-content">
+                    <svg class="pdf-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Export to PDF
+                  </span>
                 )}
               </button>
             </div>

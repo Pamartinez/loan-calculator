@@ -1,0 +1,66 @@
+@import '../../styles/variables';
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.loan-calculator-app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  .app-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: $spacing-xl $spacing-lg;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    h1 {
+      margin: 0 0 $spacing-xs 0;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 16px;
+      opacity: 0.95;
+      font-weight: 400;
+    }
+  }
+
+  .app-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: $spacing-lg;
+  }
+
+  .tab-panel {
+    background: $bg-white;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-card;
+    min-height: 400px;
+  }
+}
+
+@media (max-width: $breakpoint-tablet) {
+  .loan-calculator-app {
+    .app-header {
+      padding: $spacing-lg $spacing-md;
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+      }
+    }
+
+    .app-content {
+      padding: $spacing-md;
+    }
+  }
+}

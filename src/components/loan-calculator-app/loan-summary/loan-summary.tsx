@@ -1,5 +1,5 @@
 import { Component, h, Prop, Event, EventEmitter } from '@stencil/core';
-import { LoanFormData } from '../../data/models';
+import { LoanFormData } from '../../../data/models';
 
 @Component({
   tag: 'loan-summary',

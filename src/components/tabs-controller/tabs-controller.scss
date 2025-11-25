@@ -1,33 +1,35 @@
+@import '../../styles/variables';
+
 :host {
   display: block;
 }
 
 .tabs {
   display: flex;
-  border-bottom: 2px solid #dee2e6;
+  border-bottom: 2px solid $gray-300;
   margin-bottom: 20px;
   gap: 10px;
 }
 
 .tab {
-  padding: 12px 24px;
+  padding: $spacing-sm $spacing-lg;
   background: none;
   border: none;
   border-bottom: 3px solid transparent;
   cursor: pointer;
   font-size: 16px;
   font-weight: 500;
-  color: #6c757d;
+  color: $gray-600;
   transition: all 0.3s ease;
 
   &:hover {
-    color: #495057;
-    background-color: #f8f9fa;
+    color: $gray-700;
+    background-color: $gray-100;
   }
 
   &.active {
-    color: #007bff;
-    border-bottom-color: #007bff;
+    color: $primary-blue;
+    border-bottom-color: $primary-blue;
   }
 }
 
@@ -36,7 +38,7 @@
 }
 
 // Responsive styles
-@media (max-width: 768px) {
+@media (max-width: $breakpoint-tablet) {
   .tabs {
     flex-direction: column;
     gap: 0;
@@ -44,14 +46,14 @@
   }
 
   .tab {
-    padding: 10px 16px;
+    padding: 10px $spacing-md;
     font-size: 14px;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid $gray-300;
     border-left: 3px solid transparent;
 
     &.active {
-      border-bottom-color: #dee2e6;
-      border-left-color: #007bff;
+      border-bottom-color: $gray-300;
+      border-left-color: $primary-blue;
     }
   }
 

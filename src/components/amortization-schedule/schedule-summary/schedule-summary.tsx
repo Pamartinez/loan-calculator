@@ -1,5 +1,6 @@
 import { Component, h, Prop } from '@stencil/core';
 import { AmortizationRow } from '../../../data/models';
+import { formatCurrency } from '../../../utils/utils';
 
 @Component({
   tag: 'schedule-summary',
@@ -8,17 +9,6 @@ import { AmortizationRow } from '../../../data/models';
 })
 export class ScheduleSummary {
   @Prop() schedule: AmortizationRow[] = [];
-
-  private currencyFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
-  private formatCurrency(value: number): string {
-    return this.currencyFormatter.format(value);
-  }
 
   render() {
     if (this.schedule.length === 0) {
@@ -32,7 +22,7 @@ export class ScheduleSummary {
       <div class="summary-section">
         <div class="summary-item">
           <span class="summary-label">Total Amount Paid:</span>
-          <span class="summary-value">{this.formatCurrency(totalAmountPaid)}</span>
+          <span class="summary-value">{formatCurrency(totalAmountPaid)}</span>
         </div>
         <div class="summary-item">
           <span class="summary-label">Years to Pay Off:</span>

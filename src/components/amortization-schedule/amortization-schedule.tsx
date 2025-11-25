@@ -24,8 +24,6 @@ export class AmortizationSchedule {
 
         return (
             <div>
-                <balance-graph schedule={this.schedule} />
-
                 <schedule-view
                     schedule={this.schedule}
                     onRowClicked={(e) => this.handleRowClick(e)}

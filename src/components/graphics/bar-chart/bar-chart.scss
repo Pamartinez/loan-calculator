@@ -1,23 +1,45 @@
 .chart-container {
-  margin-top: 20px;
-  margin-bottom: 30px;
   position: relative;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s ease-in-out;
 
-  @media print {
-    page-break-inside: avoid;
-    margin-top: 15px;
-    margin-bottom: 15px;
+  &:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
   }
+}
+
+.chart-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 }
 
 .chart-bars {
   display: flex;
   align-items: flex-end;
-  height: var(--chart-height, 200px);
-  gap: 2px;
-  border-bottom: 2px solid #333;
+  height: var(--chart-height, 280px);
+  gap: 4px;
+  border-bottom: 2px solid #2d3748;
   padding-bottom: 10px;
   position: relative;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.02) 0%, transparent 100%);
+  border-radius: 4px 4px 0 0;
+
+  @media (max-width: 768px) {
+    height: 220px;
+    gap: 2px;
+  }
+
+  @media (max-width: 500px) {
+    height: 180px;
+    gap: 1px;
+  }
 }
 
 .bar-wrapper {
@@ -28,6 +50,13 @@
   justify-content: flex-end;
   cursor: pointer;
   position: relative;
+  transition: transform 0.2s ease-in-out;
+  min-width: 8px;
+
+  &:hover {
+    transform: translateY(-4px);
+    z-index: 10;
+  }
 
   &:first-child .tooltip,
   &:nth-child(2) .tooltip,
@@ -61,20 +90,114 @@
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 10px;
-  background: white;
-  padding: 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 14px;
+  background: rgba(26, 32, 44, 0.96);
+  color: white;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 6px 10px rgba(0, 0, 0, 0.15);
   white-space: nowrap;
   z-index: 1000;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 0.875rem;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  animation: tooltipFadeIn 0.2s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.tooltip-header {
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tooltip-content {
+  padding: 0.5rem 0;
 }
 
 .tooltip-item {
-  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  gap: 2rem;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  &.interest .tooltip-label::before {
+    background-color: #ef4444;
+  }
+
+  &.principal .tooltip-label::before {
+    background-color: #3b82f6;
+  }
+
+  &.additional .tooltip-label::before {
+    background-color: #f59e0b;
+  }
+
+  .tooltip-label {
+    color: #cbd5e0;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+  }
+
+  .tooltip-value {
+    font-weight: 600;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.tooltip-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem 0.75rem;
+  gap: 2rem;
+  margin-top: 0.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+
+  .tooltip-label {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .tooltip-value {
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 .tooltip-arrow {
@@ -83,41 +206,81 @@
   left: 50%;
   width: 12px;
   height: 12px;
-  background: white;
-  border: 1px solid #ddd;
+  background: rgba(26, 32, 44, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-top: none;
   border-left: none;
   transform: translateX(-50%) rotate(45deg);
 }
 
 .bar-interest {
-  background-color: var(--bar-interest, #c5ddf7);
-  transition: background-color 0.2s;
+  background: linear-gradient(to top, #ef4444, #f87171);
+  transition: all 0.3s ease;
+  border-radius: 2px 2px 0 0;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.1);
 
   .bar-wrapper:hover & {
-    background-color: var(--bar-interest-hover, #a3c9f5);
+    background: linear-gradient(to top, #dc2626, #ef4444);
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(239, 68, 68, 0.3);
   }
 }
 
 .bar-principal {
-  background-color: var(--bar-principal, #5b9bf5);
-  transition: background-color 0.2s;
+  background: linear-gradient(to top, #3b82f6, #60a5fa);
+  transition: all 0.3s ease;
+  border-radius: 2px 2px 0 0;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.1);
 
   .bar-wrapper:hover & {
-    background-color: var(--bar-principal-hover, #2563eb);
+    background: linear-gradient(to top, #2563eb, #3b82f6);
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(59, 130, 246, 0.3);
+  }
+}
+
+.bar-additional-principal {
+  background: linear-gradient(to top, #f59e0b, #fbbf24);
+  transition: all 0.3s ease;
+  border-radius: 2px 2px 0 0;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+
+  .bar-wrapper:hover & {
+    background: linear-gradient(to top, #d97706, #f59e0b);
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(245, 158, 11, 0.3);
   }
 }
 
 .x-axis-labels {
   display: flex;
-  margin-top: 5px;
-  font-size: 12px;
+  margin-top: 12px;
+  font-size: 0.75rem;
+  color: #4a5568;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem;
+    margin-top: 8px;
+  }
 }
 
 .x-axis-label {
   flex: 1;
   text-align: center;
-  transform: rotate(-45deg);
-  transform-origin: center;
-  font-size: 10px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+
+  @media (min-width: 769px) {
+    &:nth-child(odd) {
+      color: #2d3748;
+    }
+  }
+
+  @media (max-width: 768px) {
+    transform: rotate(-45deg);
+    transform-origin: center;
+    font-size: 0.65rem;
+  }
+
+  @media (max-width: 500px) {
+    font-size: 0.6rem;
+  }
 }

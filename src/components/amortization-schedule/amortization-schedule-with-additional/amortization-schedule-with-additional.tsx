@@ -1,6 +1,5 @@
-import { Component, h, Prop, State, Watch } from '@stencil/core';
-import { AmortizationRow, LoanFormData } from '../../../data/models';
-import { calculateAmortization } from '../../../utils/amortization';
+import { Component, h, Prop } from '@stencil/core';
+import { LoanFormData, AmortizationData } from '../../../data/models';
 
 @Component({
   tag: 'amortization-schedule-with-additional',
@@ -9,43 +8,14 @@ import { calculateAmortization } from '../../../utils/amortization';
 })
 export class AmortizationScheduleWithAdditional {
   @Prop() loanData: LoanFormData;
-
-  @State() amortizationScheduleWithAdditionalPrincipal: AmortizationRow[] = [];
-
-  componentWillLoad() {
-    this.calculateSchedule();
-  }
-
-  @Watch('loanData')
-  handleLoanDataChange() {
-    this.calculateSchedule();
-  }
-
-  private calculateSchedule() {
-    if (!this.loanData || !this.loanData.loanAmount || !this.loanData.rate || !this.loanData.totalMonthlyPayment || !this.loanData.startDate) {
-      return;
-    }
-
-    // Calculate amortization with additional principal if applicable
-    if (this.loanData.additionalPrincipal && this.loanData.additionalPrincipal > 0) {
-      this.amortizationScheduleWithAdditionalPrincipal = calculateAmortization(this.loanData);
-    } else {
-      this.amortizationScheduleWithAdditionalPrincipal = [];
-    }
-  }
+  @Prop() amortizationEntries: AmortizationData[] = [];
 
   render() {
     return (
       <div >
-        
-        <schedule-summary schedule={this.amortizationScheduleWithAdditionalPrincipal} />
-        <key-metrics-dashboard loanData={this.loanData} />
-        <payoff-progress loanData={this.loanData} />
-        <savings-comparison-graph loanData={this.loanData} />
-        <pie-chart schedule={this.amortizationScheduleWithAdditionalPrincipal} />
-        <cumulative-payment-graph schedule={this.amortizationScheduleWithAdditionalPrincipal} />
-        <amortization-schedule
-          schedule={this.amortizationScheduleWithAdditionalPrincipal}
+        <amortization-schedule-base
+          loanData={this.loanData}
+          amortizationEntries={this.amortizationEntries}
           style={{
             '--bar-interest': '#d4edda',
             '--bar-interest-hover': '#b8dcc4',

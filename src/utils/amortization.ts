@@ -1,11 +1,12 @@
-import { AmortizationRow, LoanFormData } from '../data/models';
+import { AmortizationRow, LoanFormData, AmortizationData } from '../data/models';
 
 function getMonthName(month: number): string {
   return new Date(2000, month - 1).toLocaleString('en-US', { month: 'long' });
 }
 
 export function calculateAmortization(
-  loanData: LoanFormData
+  loanData: LoanFormData,
+  amortizationEntries: AmortizationData[] = []
 ): AmortizationRow[] {
   const schedule: AmortizationRow[] = [];
   const monthlyRate = loanData.rate / 100 / 12;
@@ -38,17 +39,27 @@ export function calculateAmortization(
     const interestPayment = remainingBalance * monthlyRate;
     let principalPayment = principalAndInterestPayment - interestPayment;
 
+    // Format current date as YYYY-MM for comparison
+    const currentDateStr = `${currentYear}-${String(currentMonth).padStart(2, '0')}`;
+
+    // Check if there are additional payments for this month and sum them
+    const additionalEntriesForMonth = amortizationEntries.filter(entry => entry.date === currentDateStr);
+    const extraPrincipalPayment = additionalEntriesForMonth.reduce((sum, entry) => sum + entry.amount, 0);
+
+    // Total additional principal for this month
+    const totalAdditionalPrincipal = additionalPrincipal + extraPrincipalPayment;
+
     // Ensure we don't overpay
-    if (principalPayment + additionalPrincipal > remainingBalance) {
-      principalPayment = remainingBalance - additionalPrincipal;
+    if (principalPayment + totalAdditionalPrincipal > remainingBalance) {
+      principalPayment = remainingBalance - totalAdditionalPrincipal;
       if (principalPayment < 0) principalPayment = remainingBalance;
     }
 
     yearlyInterest += interestPayment;
     yearlyPrincipal += principalPayment;
-    yearlyAdditionalPrincipal += additionalPrincipal;
+    yearlyAdditionalPrincipal += totalAdditionalPrincipal;
 
-    remainingBalance -= (principalPayment + additionalPrincipal);
+    remainingBalance -= (principalPayment + totalAdditionalPrincipal);
 
     // Prevent negative balance
     if (remainingBalance < 0) remainingBalance = 0;
@@ -57,7 +68,7 @@ export function calculateAmortization(
     monthlyDetails.push({
       time: getMonthName(currentMonth),
       principal: principalPayment,
-      additionalPrincipal,
+      additionalPrincipal: totalAdditionalPrincipal,
       interest: interestPayment,
       remainingBalance: remainingBalance,
       details: [],

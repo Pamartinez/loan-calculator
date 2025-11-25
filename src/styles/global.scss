@@ -1,17 +1,21 @@
+@import './variables';
+
 :host {
   display: block;
 }
 
 .input-style {
-  border: 0.8px solid rgb(149, 149, 149);
-  border-radius: 4px;
+  border: 0.8px solid $gray-border;
+  border-radius: $border-radius-sm;
   cursor: text;
   appearance: auto;
   text-rendering: auto;
   display: block;
   width: 100%;
   box-sizing: border-box;
-  width: var(--input-width, $min-input-width);
+  max-width: var(--input-width, $max-input-width);
+  width: 100%;
+  min-width: 100px;
 
   &:focus {
     outline: none;
@@ -24,5 +28,22 @@
     &:focus {
       box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px, $danger-500 0px 0px 0px 4px;
     }
+  }
+}
+
+.section {
+  margin: 20px 0;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+
+  @media print {
+    page-break-inside: avoid;
+    margin: 15px 0;
+    padding: 15px;
+    background: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }

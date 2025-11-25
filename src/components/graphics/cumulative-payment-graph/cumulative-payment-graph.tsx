@@ -1,4 +1,4 @@
-import { Component, h, Prop, Element } from '@stencil/core';
+import { Component, h, Prop, Element, State } from '@stencil/core';
 import { AmortizationRow } from '../../../data/models';
 
 @Component({
@@ -9,9 +9,22 @@ import { AmortizationRow } from '../../../data/models';
 export class CumulativePaymentGraph {
   @Prop() schedule: AmortizationRow[] = [];
   @Element() el: HTMLElement;
+  @State() tooltipData: { x: number; y: number; visible: boolean; year: number; principal: string; interest: string; total: string } = {
+    x: 0,
+    y: 0,
+    visible: false,
+    year: 0,
+    principal: '',
+    interest: '',
+    total: '',
+  };
 
   private canvasRef: HTMLCanvasElement;
   private resizeObserver: ResizeObserver;
+  private graphData: any[] = [];
+  private scaleXFunc: (year: number) => number;
+  private scaleYFunc: (value: number) => number;
+  private padding: any;
 
   componentDidLoad() {
     this.drawGraph();
@@ -56,14 +69,15 @@ export class CumulativePaymentGraph {
     const isSmall = width < 500;
     const isMedium = width >= 500 && width < 800;
 
-    const padding = isSmall
-      ? { top: 30, right: 20, bottom: 60, left: 60 }
+    this.padding = isSmall
+      ? { top: 40, right: 20, bottom: 70, left: 70 }
       : isMedium
-        ? { top: 35, right: 30, bottom: 70, left: 70 }
-        : { top: 40, right: 40, bottom: 80, left: 80 };
+        ? { top: 45, right: 30, bottom: 80, left: 80 }
+        : { top: 50, right: 50, bottom: 90, left: 90 };
 
-    const fontSize = isSmall ? 10 : isMedium ? 11 : 12;
-    const titleFontSize = isSmall ? 12 : isMedium ? 14 : 16;
+    const padding = this.padding;
+    const fontSize = isSmall ? 11 : isMedium ? 12 : 13;
+    const titleFontSize = isSmall ? 15 : isMedium ? 17 : 19;
 
     const graphWidth = width - padding.left - padding.right;
     const graphHeight = height - padding.top - padding.bottom;
@@ -84,18 +98,25 @@ export class CumulativePaymentGraph {
       };
     });
 
+    this.graphData = data;
     const maxValue = Math.max(...data.map((d) => d.cumulativeTotal));
     const minYear = data[0].year;
     const maxYear = data[data.length - 1].year;
     const yearRange = maxYear - minYear;
 
-    const scaleX = (year: number) => padding.left + ((year - minYear) / yearRange) * graphWidth;
-    const scaleY = (value: number) => padding.top + graphHeight - (value / maxValue) * graphHeight;
+    this.scaleXFunc = (year: number) => padding.left + ((year - minYear) / yearRange) * graphWidth;
+    this.scaleYFunc = (value: number) => padding.top + graphHeight - (value / maxValue) * graphHeight;
+    const scaleX = this.scaleXFunc;
+    const scaleY = this.scaleYFunc;
+
+    // Draw background
+    ctx.fillStyle = '#fafbfc';
+    ctx.fillRect(padding.left, padding.top, graphWidth, graphHeight);
 
     // Draw grid
-    ctx.strokeStyle = '#e0e0e0';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = '#e8eaed';
+    ctx.lineWidth = 0.5;
+    ctx.setLineDash([3, 3]);
 
     const numGridLines = isSmall ? 4 : 5;
     for (let i = 0; i <= numGridLines; i++) {
@@ -117,10 +138,17 @@ export class CumulativePaymentGraph {
 
     ctx.setLineDash([]);
 
-    // Draw lines
-    const drawLine = (dataKey: 'cumulativeTotal' | 'cumulativePrincipal' | 'cumulativeInterest', color: string, lineWidth: number) => {
+    // Draw lines with shadows and gradients
+    const drawLine = (dataKey: 'cumulativeTotal' | 'cumulativePrincipal' | 'cumulativeInterest', color: string, lineWidth: number, shadowColor: string) => {
+      ctx.save();
+      ctx.shadowColor = shadowColor;
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 1;
       ctx.strokeStyle = color;
       ctx.lineWidth = lineWidth;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
       ctx.beginPath();
       data.forEach((point, index) => {
         const x = scaleX(point.year);
@@ -132,15 +160,17 @@ export class CumulativePaymentGraph {
         }
       });
       ctx.stroke();
+      ctx.restore();
     };
 
-    drawLine('cumulativeTotal', '#6c757d', 2.5);
-    drawLine('cumulativePrincipal', '#28a745', 2.5);
-    drawLine('cumulativeInterest', '#dc3545', 2.5);
+    drawLine('cumulativeTotal', '#4a5568', 3, 'rgba(74, 85, 104, 0.2)');
+    drawLine('cumulativePrincipal', '#10b981', 3, 'rgba(16, 185, 129, 0.2)');
+    drawLine('cumulativeInterest', '#ef4444', 3, 'rgba(239, 68, 68, 0.2)');
 
     // Draw axes
-    ctx.strokeStyle = '#333';
+    ctx.strokeStyle = '#2d3748';
     ctx.lineWidth = 2;
+    ctx.lineCap = 'square';
     ctx.beginPath();
     ctx.moveTo(padding.left, padding.top);
     ctx.lineTo(padding.left, height - padding.bottom);
@@ -148,14 +178,14 @@ export class CumulativePaymentGraph {
     ctx.stroke();
 
     // Labels
-    ctx.fillStyle = '#333';
-    ctx.font = `${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+    ctx.fillStyle = '#1a202c';
+    ctx.font = `${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif`;
     ctx.textAlign = 'center';
 
     const labelYearStep = isSmall ? yearStep * 2 : yearStep;
     for (let year = minYear; year <= maxYear; year += labelYearStep) {
       const x = scaleX(year);
-      ctx.fillText(year.toString(), x, height - padding.bottom + (isSmall ? 15 : 20));
+      ctx.fillText(year.toString(), x, height - padding.bottom + (isSmall ? 18 : 25));
     }
 
     ctx.textAlign = 'right';
@@ -175,28 +205,94 @@ export class CumulativePaymentGraph {
     }
 
     // Title
-    ctx.font = `bold ${titleFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+    ctx.font = `600 ${titleFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif`;
     ctx.textAlign = 'center';
-    ctx.fillText('Cumulative Payments Over Time', width / 2, isSmall ? 15 : 20);
+    ctx.fillStyle = '#1a202c';
+    ctx.fillText('Cumulative Payments Over Time', width / 2, isSmall ? 20 : 25);
 
-    // Legend
-    const legendY = height - padding.bottom + (isSmall ? 30 : 40);
-    const legendSpacing = isSmall ? width / 3 : 150;
+    // Legend with improved design
+    const legendY = height - padding.bottom + (isSmall ? 40 : 50);
+    const legendSpacing = isSmall ? width / 3 : 160;
     const legendStartX = width / 2 - legendSpacing;
 
-    ctx.font = `${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+    ctx.font = `500 ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif`;
 
     const drawLegendItem = (x: number, color: string, text: string) => {
-      ctx.fillStyle = color;
-      ctx.fillRect(x, legendY - 6, isSmall ? 15 : 20, isSmall ? 2 : 3);
-      ctx.fillStyle = '#333';
+      // Draw line segment
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(x, legendY - 4);
+      ctx.lineTo(x + (isSmall ? 20 : 24), legendY - 4);
+      ctx.stroke();
+
+      // Draw text
+      ctx.fillStyle = '#2d3748';
       ctx.textAlign = 'left';
-      ctx.fillText(text, x + (isSmall ? 20 : 25), legendY);
+      ctx.fillText(text, x + (isSmall ? 26 : 30), legendY);
     };
 
-    drawLegendItem(legendStartX, '#28a745', 'Principal');
-    drawLegendItem(legendStartX + legendSpacing, '#dc3545', 'Interest');
-    drawLegendItem(legendStartX + legendSpacing * 2, '#6c757d', 'Total');
+    drawLegendItem(legendStartX, '#10b981', 'Principal');
+    drawLegendItem(legendStartX + legendSpacing, '#ef4444', 'Interest');
+    drawLegendItem(legendStartX + legendSpacing * 2, '#4a5568', 'Total');
+  }
+
+  private handleMouseMove = (event: MouseEvent) => {
+    if (!this.canvasRef || !this.graphData.length) return;
+
+    const rect = this.canvasRef.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const padding = this.padding;
+    if (!padding) return;
+
+    // Check if mouse is within graph area
+    if (x < padding.left || x > rect.width - padding.right || y < padding.top || y > rect.height - padding.bottom) {
+      this.tooltipData = { ...this.tooltipData, visible: false };
+      return;
+    }
+
+    // Find closest data point
+    let closestPoint = null;
+    let minDistance = Infinity;
+
+    this.graphData.forEach(point => {
+      const px = this.scaleXFunc(point.year);
+      const py = this.scaleYFunc(point.cumulativeTotal);
+      const distance = Math.sqrt((x - px) ** 2 + (y - py) ** 2);
+
+      if (distance < minDistance && distance < 30) {
+        minDistance = distance;
+        closestPoint = point;
+      }
+    });
+
+    if (closestPoint) {
+      const formatCurrency = (value: number) => new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(value);
+
+      this.tooltipData = {
+        x: event.clientX,
+        y: event.clientY,
+        visible: true,
+        year: closestPoint.year,
+        principal: formatCurrency(closestPoint.cumulativePrincipal),
+        interest: formatCurrency(closestPoint.cumulativeInterest),
+        total: formatCurrency(closestPoint.cumulativeTotal),
+      };
+    } else {
+      this.tooltipData = { ...this.tooltipData, visible: false };
+    }
+  }
+
+  private handleMouseLeave = () => {
+    this.tooltipData = { ...this.tooltipData, visible: false };
   }
 
   render() {
@@ -205,8 +301,35 @@ export class CumulativePaymentGraph {
     }
 
     return (
-      <div class="cumulative-graph-container">
-        <canvas ref={(el) => (this.canvasRef = el)}></canvas>
+      <div class="cumulative-graph-container section">
+        <canvas
+          ref={(el) => (this.canvasRef = el)}
+          onMouseMove={this.handleMouseMove}
+          onMouseLeave={this.handleMouseLeave}
+        ></canvas>
+        {this.tooltipData.visible && (
+          <div
+            class="tooltip"
+            style={{
+              left: `${this.tooltipData.x + 10}px`,
+              top: `${this.tooltipData.y - 80}px`,
+            }}
+          >
+            <div class="tooltip-header">Year {this.tooltipData.year}</div>
+            <div class="tooltip-row">
+              <span class="tooltip-label principal">Principal:</span>
+              <span class="tooltip-value">{this.tooltipData.principal}</span>
+            </div>
+            <div class="tooltip-row">
+              <span class="tooltip-label interest">Interest:</span>
+              <span class="tooltip-value">{this.tooltipData.interest}</span>
+            </div>
+            <div class="tooltip-row total">
+              <span class="tooltip-label">Total:</span>
+              <span class="tooltip-value">{this.tooltipData.total}</span>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

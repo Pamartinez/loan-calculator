@@ -27,3 +27,9 @@ export interface AmortizationRow {
   remainingBalance: number;
   details: AmortizationRow[];
 }
+
+export interface AmortizationData {
+  amount: number;
+  date: string;
+  id: string;
+}

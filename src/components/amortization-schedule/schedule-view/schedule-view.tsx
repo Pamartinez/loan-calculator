@@ -1,5 +1,6 @@
 import { Component, h, Prop, Event, EventEmitter } from '@stencil/core';
 import { AmortizationRow } from '../../../data/models';
+import { formatCurrency } from '../../../utils/utils';
 
 @Component({
   tag: 'schedule-view',
@@ -9,17 +10,6 @@ import { AmortizationRow } from '../../../data/models';
 export class ScheduleView {
   @Prop() schedule: AmortizationRow[] = [];
   @Event() rowClicked: EventEmitter<AmortizationRow>;
-
-  private currencyFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
-  private formatCurrency(value: number): string {
-    return this.currencyFormatter.format(value);
-  }
 
   handleRowClick(row: AmortizationRow) {
     this.rowClicked.emit(row);
@@ -35,48 +25,53 @@ export class ScheduleView {
         <bar-chart schedule={this.schedule} onRowClicked={(e) => this.rowClicked.emit(e.detail)} />
 
         {/* Table */}
-        <table class="schedule-table">
-          <thead>
-            <tr class="table-header">
-              <th>Year</th>
-              <th class="text-right">Principal</th>
-              <th class="text-right">Additional Principal</th>
-              <th class="text-right">Total Principal</th>
-              <th class="text-right">Interest</th>
-              <th class="text-right">Remaining Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.schedule.map((row) => (
-              <tr class="table-row">
-                <td>{row.time}</td>
-                <td class="text-right">{this.formatCurrency(row.principal)}</td>
-                <td class="text-right">{this.formatCurrency(row.additionalPrincipal)}</td>
-                <td class="text-right">{this.formatCurrency(row.principal + row.additionalPrincipal)}</td>
-                <td class="text-right">{this.formatCurrency(row.interest)}</td>
-                <td class="text-right">{this.formatCurrency(row.remainingBalance)}</td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr class="table-footer">
-              <td>Time</td>
-              <td class="text-right">
-                {this.formatCurrency(this.schedule.reduce((sum, row) => sum + row.principal, 0))}
-              </td>
-              <td class="text-right">
-                {this.formatCurrency(this.schedule.reduce((sum, row) => sum + row.additionalPrincipal, 0))}
-              </td>
-              <td class="text-right">
-                {this.formatCurrency(this.schedule.reduce((sum, row) => sum + (row.additionalPrincipal + row.principal), 0))}
-              </td>
-              <td class="text-right">
-                {this.formatCurrency(this.schedule.reduce((sum, row) => sum + row.interest, 0))}
-              </td>
-              <td class="text-right"></td>
-            </tr>
-          </tfoot>
-        </table>
+        <div class="table-wrapper section">
+          <h3 class="table-title">Amortization Schedule</h3>
+          <div class="table-container">
+            <table class="schedule-table">
+              <thead>
+                <tr class="table-header">
+                  <th>Time</th>
+                  <th class="text-right">Principal</th>
+                  <th class="text-right">Additional Principal</th>
+                  <th class="text-right">Total Principal</th>
+                  <th class="text-right">Interest</th>
+                  <th class="text-right">Remaining Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.schedule.map((row) => (
+                  <tr class="table-row" onClick={() => this.handleRowClick(row)}>
+                    <td>{row.time}</td>
+                    <td class="text-right">{formatCurrency(row.principal)}</td>
+                    <td class="text-right">{formatCurrency(row.additionalPrincipal)}</td>
+                    <td class="text-right">{formatCurrency(row.principal + row.additionalPrincipal)}</td>
+                    <td class="text-right">{formatCurrency(row.interest)}</td>
+                    <td class="text-right">{formatCurrency(row.remainingBalance)}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr class="table-footer">
+                  <td>Time</td>
+                  <td class="text-right">
+                    {formatCurrency(this.schedule.reduce((sum, row) => sum + row.principal, 0))}
+                  </td>
+                  <td class="text-right">
+                    {formatCurrency(this.schedule.reduce((sum, row) => sum + row.additionalPrincipal, 0))}
+                  </td>
+                  <td class="text-right">
+                    {formatCurrency(this.schedule.reduce((sum, row) => sum + (row.additionalPrincipal + row.principal), 0))}
+                  </td>
+                  <td class="text-right">
+                    {formatCurrency(this.schedule.reduce((sum, row) => sum + row.interest, 0))}
+                  </td>
+                  <td class="text-right"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
       </div>
     );
   }

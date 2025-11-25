@@ -1,6 +1,7 @@
 import { Component, h, Prop } from '@stencil/core';
-import { LoanFormData } from '../../../data/models';
+import { LoanFormData, AmortizationData } from '../../../data/models';
 import { calculateAmortization } from '../../../utils/amortization';
+import { formatCurrencyWhole } from '../../../utils/utils';
 
 @Component({
   tag: 'payoff-progress',
@@ -9,6 +10,7 @@ import { calculateAmortization } from '../../../utils/amortization';
 })
 export class PayoffProgress {
   @Prop() loanData: LoanFormData;
+  @Prop() amortizationEntries: AmortizationData[] = [];
   @Prop() currentDate?: string; // Format: YYYY-MM
 
   private calculateProgress() {
@@ -16,7 +18,7 @@ export class PayoffProgress {
       return null;
     }
 
-    const schedule = calculateAmortization(this.loanData);
+    const schedule = calculateAmortization(this.loanData, this.amortizationEntries);
     const totalYears = schedule.length;
 
     // Calculate years passed
@@ -28,12 +30,21 @@ export class PayoffProgress {
     const percentComplete = Math.min(Math.max((yearsPassed / totalYears) * 100, 0), 100);
     const yearsRemaining = Math.max(totalYears - yearsPassed, 0);
 
-    // Calculate amount paid
+    // Calculate actual amount paid from schedule
     const totalLoanAmount = this.loanData.loanAmount;
-    const monthlyPrincipal = totalLoanAmount / (totalYears * 12);
-    const monthsPassed = yearsPassed * 12;
-    const principalPaid = Math.min(monthlyPrincipal * monthsPassed, totalLoanAmount);
-    const principalRemaining = Math.max(totalLoanAmount - principalPaid, 0);
+    const currentYearIndex = Math.floor(yearsPassed);
+
+    // Get remaining balance from schedule at current point
+    let principalRemaining = totalLoanAmount;
+    if (currentYearIndex < schedule.length) {
+      const currentYearData = schedule[currentYearIndex];
+      principalRemaining = currentYearData.remainingBalance;
+    } else if (schedule.length > 0) {
+      // If we're past the schedule, loan is paid off
+      principalRemaining = 0;
+    }
+
+    const principalPaid = totalLoanAmount - principalRemaining;
 
     const milestones = [
       { percent: 25, label: '25%', reached: percentComplete >= 25 },
@@ -52,15 +63,6 @@ export class PayoffProgress {
     };
   }
 
-  private formatCurrency(value: number): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  }
-
   render() {
     const progress = this.calculateProgress();
 
@@ -69,7 +71,7 @@ export class PayoffProgress {
     }
 
     return (
-      <div class="payoff-progress">
+      <div class="payoff-progress section">
         <h3 class="progress-title">Loan Payoff Progress</h3>
 
         <div class="progress-stats">
@@ -83,22 +85,29 @@ export class PayoffProgress {
           </div>
           <div class="stat">
             <div class="stat-label">Principal Paid</div>
-            <div class="stat-value">{this.formatCurrency(progress.principalPaid)}</div>
+            <div class="stat-value">{formatCurrencyWhole(progress.principalPaid)}</div>
           </div>
           <div class="stat">
             <div class="stat-label">Principal Remaining</div>
-            <div class="stat-value">{this.formatCurrency(progress.principalRemaining)}</div>
+            <div class="stat-value">{formatCurrencyWhole(progress.principalRemaining)}</div>
           </div>
         </div>
 
         <div class="progress-bar-container">
           <div class="progress-bar">
-            <div
-              class="progress-fill"
-              style={{ width: `${progress.percentComplete}%` }}
-            >
-              <span class="progress-text">{progress.percentComplete.toFixed(1)}%</span>
-            </div>
+            {progress.percentComplete > 0 && (
+              <div
+                class="progress-fill"
+                style={{ width: `${progress.percentComplete}%` }}
+              >
+                {progress.percentComplete > 4 && (
+                  <span class="progress-text">{progress.percentComplete.toFixed(1)}%</span>
+                )}
+              </div>
+            )}
+            {progress.percentComplete > 0 && progress.percentComplete <= 4 && (
+              <span class="progress-text-outside">{progress.percentComplete.toFixed(1)}%</span>
+            )}
           </div>
         </div>
 
