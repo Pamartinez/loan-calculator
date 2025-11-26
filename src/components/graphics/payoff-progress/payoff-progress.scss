@@ -139,14 +139,17 @@
 }
 
 .progress-text {
-  color: white;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
   font-weight: 800;
-  font-size: 18px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3), 0 0 12px rgba(0, 0, 0, 0.2);
-  position: relative;
+  font-size: 1.4em;
+  text-shadow: 0 2px 12px #2e8b5744, 0 0 8px #222, 0 0 4px #222;
   z-index: 2;
-  letter-spacing: 0.5px;
   filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+  pointer-events: none;
 }
 
 .milestones {
@@ -206,7 +209,7 @@
 }
 
 .milestone-label {
-  font-size: 11px;
+  font-size: 20px;
   color: #666;
   font-weight: 500;
 
@@ -216,6 +219,6 @@
   }
 
   @media (max-width: 500px) {
-    font-size: 10px;
+    font-size: 15px;
   }
 }

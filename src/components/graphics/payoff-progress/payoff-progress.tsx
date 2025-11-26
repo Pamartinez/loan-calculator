@@ -100,14 +100,9 @@ export class PayoffProgress {
                 class="progress-fill"
                 style={{ width: `${progress.percentComplete}%` }}
               >
-                {progress.percentComplete > 4 && (
-                  <span class="progress-text">{progress.percentComplete.toFixed(1)}%</span>
-                )}
               </div>
             )}
-            {progress.percentComplete > 0 && progress.percentComplete <= 4 && (
-              <span class="progress-text-outside">{progress.percentComplete.toFixed(1)}%</span>
-            )}
+            <span class="progress-text">{progress.percentComplete.toFixed(1)}%</span>
           </div>
         </div>
 

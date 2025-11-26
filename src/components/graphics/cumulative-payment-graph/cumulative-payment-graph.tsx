@@ -1,4 +1,5 @@
 import { Component, h, Prop, Element, State } from '@stencil/core';
+import { formatCurrency } from '../../../utils/utils';
 import { AmortizationRow } from '../../../data/models';
 
 @Component({
@@ -70,7 +71,7 @@ export class CumulativePaymentGraph {
     const isMedium = width >= 500 && width < 800;
 
     this.padding = isSmall
-      ? { top: 40, right: 20, bottom: 70, left: 70 }
+      ? { top: 40, right: 20, bottom: 70, left: 40 }
       : isMedium
         ? { top: 45, right: 30, bottom: 80, left: 80 }
         : { top: 50, right: 50, bottom: 90, left: 90 };
@@ -213,7 +214,8 @@ export class CumulativePaymentGraph {
     // Legend with improved design
     const legendY = height - padding.bottom + (isSmall ? 40 : 50);
     const legendSpacing = isSmall ? width / 3 : 160;
-    const legendStartX = width / 2 - legendSpacing;
+    // Move legend further to the left
+    const legendStartX = padding.left;
 
     ctx.font = `500 ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif`;
 
@@ -270,13 +272,6 @@ export class CumulativePaymentGraph {
     });
 
     if (closestPoint) {
-      const formatCurrency = (value: number) => new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(value);
-
       this.tooltipData = {
         x: event.clientX,
         y: event.clientY,

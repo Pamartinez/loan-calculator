@@ -5,10 +5,9 @@
 
 // Storage key constants
 export const STORAGE_KEYS = {
-    LOAN_DATA_DICTIONARY: 'loanCalculator_loanDataDictionary',
-    CURRENT_LOAN_DATA: 'loanCalculator_currentLoanData',
-    AMORTIZATION_ENTRIES: 'loanCalculator_amortizationEntries',
-    APP_STATE: 'loanCalculator_appState',
+    LOAN_DATA_DICTIONARY: 'loanDataDictionary',
+    CURRENT_LOAN_DATA: 'currentLoanData',
+    AMORTIZATION_ENTRIES: 'amortizationEntries',
 } as const;
 
 /**

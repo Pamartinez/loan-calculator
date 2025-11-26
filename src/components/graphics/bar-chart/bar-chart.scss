@@ -1,3 +1,4 @@
+/* Rollback to previous styles before mobile changes */
 .tooltip-content {
   padding-top: 8px;
 }
@@ -219,4 +220,8 @@
     word-break: break-word;
     text-align: right;
   }
+}
+
+.section {
+  padding: 20px 10px 20px 10px !important;
 }
