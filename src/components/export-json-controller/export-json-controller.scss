@@ -18,7 +18,7 @@
   }
 
   .description {
-    color: $gray-text-light;
+    color: #666;
     margin-bottom: $spacing-lg;
     line-height: 1.5;
   }
@@ -28,23 +28,6 @@
     gap: $spacing-md;
     flex-wrap: wrap;
     margin-bottom: $spacing-lg;
-
-    button {
-      @extend .button-style;
-      display: flex;
-      align-items: center;
-      gap: $spacing-xs;
-      flex: 1;
-      min-width: 180px;
-      justify-content: center;
-
-      .icon {
-        font-size: 20px;
-      }
-
-      // Only keep styles that override .button-style if needed
-      // .export-btn, .import-btn, .clear-btn override styles can be added here if needed
-    }
   }
 
   .status-message {
@@ -83,7 +66,7 @@
     ul {
       margin: 0;
       padding-left: $spacing-lg;
-      color: $gray-text-medium;
+      color: #555;
 
       li {
         margin-bottom: $spacing-xs;
@@ -108,5 +91,17 @@
         min-width: 100%;
       }
     }
+  }
+}
+
+.export-btn {
+  background-color: $success-green;
+
+  &:hover {
+    background-color: $success-green-hover;
+  }
+
+  &:active {
+    background-color: #1e7e34;
   }
 }

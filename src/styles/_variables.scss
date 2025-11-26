@@ -11,6 +11,10 @@ $success-green-hover: #218838;
 $danger-red: #dc3545;
 $danger-red-hover: #c82333;
 $danger-500: #dd2b2b;
+// Darker danger shade used in button gradients
+$danger-red-dark: #bd2130;
+// Deep danger shade used in multiple components
+$danger-red-deep: #a71d2a;
 
 // Colors - Gray Scale (used across multiple components)
 $gray-100: #f8f9fa;
@@ -20,9 +24,6 @@ $gray-500: #adb5bd;
 $gray-600: #6c757d;
 $gray-700: #495057;
 $gray-800: #333;
-$gray-text-light: #666;
-$gray-text-medium: #555;
-$gray-border: rgb(149, 149, 149);
 
 // Colors - Background
 $bg-white: white;
@@ -54,7 +55,6 @@ $spacing-lg: 24px;
 $spacing-xl: 32px;
 
 // Input
-$max-input-width: 150px;
 
 // Breakpoints (used in multiple components)
 $breakpoint-tablet: 768px;

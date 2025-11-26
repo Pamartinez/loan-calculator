@@ -108,8 +108,7 @@ export class ExportJsonController {
                         Import from JSON
                     </button>
 
-                    <button class="button-style clear-btn" onClick={this.handleClearData}>
-                        <span class="icon">🗑️</span>
+                    <button class="button-style-delete" onClick={this.handleClearData}>
                         Clear All Data
                     </button>
                 </div>

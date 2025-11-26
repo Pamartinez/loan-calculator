@@ -1,20 +1,18 @@
 @import '../../styles/buttonStyles';
 
 .loan-calculator {
-  padding: 8px;
-  max-width: 600px;
-  background: #f8f9fa;
-  border-radius: 8px;
+  padding: 0;
+  max-width: 640px;
 }
 
 .form-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  background: white;
-  padding: 12px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  gap: 12px;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   max-width: 100%;
   width: 100%;
   box-sizing: border-box;
@@ -25,14 +23,16 @@
     max-width: 98vw;
     width: 100%;
     margin: 0 auto;
-    padding: 8px;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   }
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  gap: 12px;
   align-items: end;
 }
 
@@ -43,11 +43,10 @@
 
   label {
     font-weight: 600;
-    font-size: 14px;
-    color: #333;
+    font-size: 13px;
+    color: #2d3748;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 12px;
+    letter-spacing: 0.6px;
   }
 
   .input-wrapper {
@@ -55,27 +54,28 @@
     align-items: center;
     position: relative;
     white-space: nowrap;
-    gap: 4px;
+    gap: 8px;
   }
 
   .prefix,
   .suffix {
     font-weight: 600;
     font-size: 16px;
-    color: #666;
+    color: #6b7280;
     flex-shrink: 0;
   }
 
   &.full-width {
     grid-column: 1 / -1;
     padding-bottom: 12px;
-    border-bottom: 2px solid #e9ecef;
+    border-bottom: 2px solid #e5e7eb;
   }
 }
 
 .button-container {
   display: flex;
   align-items: flex-end;
+  justify-content: flex-end;
 }
 
 .button-content {
@@ -83,4 +83,15 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+
+// Improve spacing specific to the last row where the button resides
+.form-row:last-child {
+  align-items: center;
+}
+
+// Make select input visually consistent width
+select.input-style {
+  height: 36px;
+  border-radius: 8px;
 }

@@ -1,5 +1,23 @@
 @import './variables';
 
+@mixin button-with-icon($icon) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: $icon;
+    font-size: 16px;
+    line-height: 1;
+    display: inline-block;
+  }
+}
+
+// Helper: generate RGBA from the shared $danger-red color
+@function danger-rgba($alpha) {
+  @return rgba($danger-red, $alpha);
+}
+
 .button-style {
   background-color: $primary-blue;
   color: white;
@@ -46,37 +64,28 @@
 
 .button-style-delete {
   @extend .button-style;
-  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  background: linear-gradient(135deg, $danger-red 0%, $danger-red-hover 100%);
   position: relative;
   overflow: hidden;
 
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  @include button-with-icon('🗑️');
 
   padding: 12px 24px;
   font-weight: 600;
   letter-spacing: 0.3px;
 
-  &::before {
-    content: '🗑️';
-    font-size: 16px;
-    line-height: 1;
-    display: inline-block;
-  }
-
   &:hover {
-    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
-    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
+    background: linear-gradient(135deg, $danger-red-hover 0%, $danger-red-dark 100%);
+    box-shadow: 0 6px 12px danger-rgba(0.3);
   }
 
   &:active {
-    background: linear-gradient(135deg, #bd2130 0%, #a71d2a 100%);
-    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+    background: linear-gradient(135deg, $danger-red-dark 0%, $danger-red-deep 100%);
+    box-shadow: 0 2px 4px danger-rgba(0.2);
   }
 
   &:focus {
-    outline: 3px solid rgba(220, 53, 69, 0.4);
+    outline: 3px solid danger-rgba(0.4);
     outline-offset: 3px;
   }
 }
@@ -86,16 +95,7 @@
   background-color: #28a745;
   color: white;
 
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  &::before {
-    content: '➕';
-    font-size: 16px;
-    line-height: 1;
-    display: inline-block;
-  }
+  @include button-with-icon('➕');
 
   &:hover {
     background-color: #218838;
@@ -107,16 +107,7 @@
   background-color: #ffc107;
   color: #212529;
 
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  &::before {
-    content: '✏️';
-    font-size: 16px;
-    line-height: 1;
-    display: inline-block;
-  }
+  @include button-with-icon('✏️');
 
   &:hover {
     background-color: #e0a800;

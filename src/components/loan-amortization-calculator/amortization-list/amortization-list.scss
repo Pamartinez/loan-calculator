@@ -80,7 +80,7 @@
         margin-left: auto;
         background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(220, 53, 69, 0.05) 100%);
         border: 2px solid transparent;
-        color: #dc3545;
+        color: $danger-red;
         font-size: 1.5rem;
         padding: 0.5rem 0.75rem;
         line-height: 1;
@@ -105,7 +105,7 @@
           inset: 0;
           border-radius: 8px;
           padding: 2px;
-          background: linear-gradient(135deg, #dc3545, #c82333);
+          background: linear-gradient(135deg, $danger-red, $danger-red-hover);
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;
@@ -114,7 +114,7 @@
         }
 
         &:hover {
-          color: #a71d2a;
+          color: $danger-red-deep;
           background: linear-gradient(135deg, rgba(220, 53, 69, 0.15) 0%, rgba(220, 53, 69, 0.1) 100%);
           transform: scale(1.1);
           box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);

@@ -82,26 +82,26 @@ export class LoanAmortizationCalculator {
         return (
             <div>
                 <div class="loan-amortization-calculator">
-                    <h1>Loan Amortization Calculator</h1>
+                    <div>
+                        <h2>Loan Details</h2>
+                        <div class="content-container">
+                            <div class="calculator-section">
+                                <loan-calculator
+                                    initialFormData={this.currentLoanData}
+                                    hideAdditionalPrincipal={true}
+                                    onFormValidityChange={this.handleFormValidityChange}
+                                    onFormSubmit={this.handleFormSubmit}
+                                />
+                            </div>
 
-                    <div class="content-container">
-                        <div class="calculator-section">
-                            <h2>Loan Details</h2>
-                            <loan-calculator
-                                initialFormData={this.currentLoanData}
-                                hideAdditionalPrincipal={true}
-                                onFormValidityChange={this.handleFormValidityChange}
-                                onFormSubmit={this.handleFormSubmit}
-                            />
-                        </div>
-
-                        <div class="amortization-section">
-                            <h2>Amortization Entries</h2>
-                            <amortization-entry onAddEntry={this.handleAddEntry} />
-                            <amortization-list
-                                entries={this.amortizationEntries}
-                                onDeleteEntry={this.handleDeleteEntry}
-                            />
+                            <div class="amortization-section">
+                                <h2>Amortization Entries</h2>
+                                <amortization-entry onAddEntry={this.handleAddEntry} />
+                                <amortization-list
+                                    entries={this.amortizationEntries}
+                                    onDeleteEntry={this.handleDeleteEntry}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
