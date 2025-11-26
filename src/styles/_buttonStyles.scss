@@ -33,6 +33,7 @@
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
+
     opacity: 0.6;
 
     &:hover {
@@ -40,5 +41,84 @@
       box-shadow: none;
       transform: none;
     }
+  }
+}
+
+.button-style-delete {
+  @extend .button-style;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  position: relative;
+  overflow: hidden;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 12px 24px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+
+  &::before {
+    content: '🗑️';
+    font-size: 16px;
+    line-height: 1;
+    display: inline-block;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
+  }
+
+  &:active {
+    background: linear-gradient(135deg, #bd2130 0%, #a71d2a 100%);
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+  }
+
+  &:focus {
+    outline: 3px solid rgba(220, 53, 69, 0.4);
+    outline-offset: 3px;
+  }
+}
+
+.button-style-add {
+  @extend .button-style;
+  background-color: #28a745;
+  color: white;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: '➕';
+    font-size: 16px;
+    line-height: 1;
+    display: inline-block;
+  }
+
+  &:hover {
+    background-color: #218838;
+  }
+}
+
+.button-style-edit {
+  @extend .button-style;
+  background-color: #ffc107;
+  color: #212529;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: '✏️';
+    font-size: 16px;
+    line-height: 1;
+    display: inline-block;
+  }
+
+  &:hover {
+    background-color: #e0a800;
   }
 }

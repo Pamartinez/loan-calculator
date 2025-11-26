@@ -13,8 +13,10 @@ export class LoanSummary {
   @Event() summaryTabChange: EventEmitter<{ loanId: string; tabIndex: number }>;
 
   private handleDelete = () => {
-    if (this.loanData?.id) {
-      this.deleteLoan.emit(this.loanData.id);
+    if (window.confirm('Are you sure you want to delete this loan?')) {
+      if (this.loanData?.id) {
+        this.deleteLoan.emit(this.loanData.id);
+      }
     }
   };
 
@@ -51,7 +53,7 @@ export class LoanSummary {
       <div>
         <div class="action-buttons">
           <button
-            class="button-style button-style-delete"
+            class="button-style-delete"
             onClick={this.handleDelete}
             aria-label="Delete loan"
             title="Delete this loan"

@@ -32,14 +32,7 @@
       }
     }
 
-    .add-button {
-      padding: 0.75rem 1.5rem;
-      height: fit-content;
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-    }
+    // Only keep styles that override .button-style if needed
+    // .add-button override styles can be added here if needed
   }
 }

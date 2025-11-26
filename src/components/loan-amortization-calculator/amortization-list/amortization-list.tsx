@@ -38,7 +38,7 @@ export class AmortizationList {
               <span class="amount">{formatCurrency(entry.amount)}</span>
               <span class="date">{this.formatDate(entry.date)}</span>
               <button
-                class="delete-button"
+                class="button-style delete-button"
                 onClick={() => this.handleDelete(entry.id)}
                 aria-label="Delete entry"
               >

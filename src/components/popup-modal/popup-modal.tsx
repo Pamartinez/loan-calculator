@@ -24,7 +24,7 @@ export class PopupModal {
         <div class="popup-content" onClick={(e) => e.stopPropagation()}>
           <div class="popup-header">
             <h3>{this.modalTitle}</h3>
-            <button class="close-button" onClick={() => this.handleClose()}>×</button>
+            <button class="button-style close-button" onClick={() => this.handleClose()}>×</button>
           </div>
           <div class="popup-body">
             <slot />

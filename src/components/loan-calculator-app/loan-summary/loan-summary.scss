@@ -1,3 +1,5 @@
+@import '../../../styles/buttonStyles';
+
 .display-name {
   font-size: 24px;
   font-weight: 600;
@@ -13,87 +15,4 @@
   gap: 10px;
   margin-bottom: 15px;
   height: 44px;
-}
-
-.button-style {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  &:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  &:active {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-
-  &:focus {
-    outline: 2px solid #0056b3;
-    outline-offset: 2px;
-  }
-}
-
-.button-style-delete {
-  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-  position: relative;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-
-  &::before {
-    content: '🗑️';
-    font-size: 16px;
-    transition: transform 0.2s ease;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.4s ease, height 0.4s ease;
-  }
-
-  &:hover {
-    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
-
-    &::before {
-      transform: scale(1.1) rotate(10deg);
-    }
-
-    &::after {
-      width: 300px;
-      height: 300px;
-    }
-  }
-
-  &:active {
-    background: linear-gradient(135deg, #bd2130 0%, #a71d2a 100%);
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
-  }
-
-  &:focus {
-    outline: 3px solid rgba(220, 53, 69, 0.4);
-    outline-offset: 3px;
-  }
 }

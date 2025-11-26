@@ -5,7 +5,7 @@
 }
 
 .input-style {
-  border: 0.8px solid $gray-border;
+  border: 1px solid $gray-border;
   border-radius: $border-radius-sm;
   cursor: text;
   appearance: auto;
@@ -15,6 +15,10 @@
   box-sizing: border-box;
   max-width: var(--input-width, $max-input-width);
   min-width: 65px;
+
+  padding: 0 0.4 * 16px;
+  height: 2 * 16px;
+  font-size: 14px;
 
   &:focus {
     outline: none;
@@ -45,32 +49,4 @@
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-}
-
-.pie-chart-legend {
-  background: #fff;
-  border-radius: 16px;
-  border: 2px solid #e0e0e0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  padding: 12px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-start;
-  width: fit-content;
-}
-.pie-chart-legend-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 1.1em;
-  font-weight: 600;
-  color: #222;
-}
-.pie-chart-legend-color {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  flex-shrink: 0;
-  margin-right: 4px;
 }

@@ -9,52 +9,36 @@
   align-items: center;
   justify-content: center;
   z-index: 2000;
-}
+  // Removed unmatched closing brace
 
-.popup-content {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  max-width: var(--popup-max-width, 900px);
-  width: var(--popup-width, 95%);
-  max-height: var(--popup-max-height, 80vh);
-  overflow: auto;
-}
-
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #e5e7eb;
-
-  h3 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: #1f2937;
+  .popup-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    max-width: var(--popup-max-width, 900px);
+    width: var(--popup-width, 95%);
+    max-height: var(--popup-max-height, 80vh);
+    overflow: auto;
   }
-}
 
-.close-button {
-  background: none;
-  border: none;
-  font-size: 28px;
-  color: #6b7280;
-  cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
 
-  &:hover {
-    background-color: #f3f4f6;
-    color: #1f2937;
+    h3 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1f2937;
+    }
   }
+
+  // Only keep styles that override .button-style if needed
+
+  // Removed orphaned hover style (should be in .button-style if needed)
 }
 
 .popup-body {

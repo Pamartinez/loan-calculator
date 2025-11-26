@@ -42,41 +42,8 @@
         font-size: 20px;
       }
 
-      &.export-btn {
-        background-color: $success-green;
-
-        &:hover {
-          background-color: $success-green-hover;
-        }
-
-        &:active {
-          background-color: #1e7e34;
-        }
-      }
-
-      &.import-btn {
-        background-color: $primary-blue;
-
-        &:hover {
-          background-color: $primary-blue-hover;
-        }
-
-        &:active {
-          background-color: $primary-blue-active;
-        }
-      }
-
-      &.clear-btn {
-        background-color: $danger-red;
-
-        &:hover {
-          background-color: $danger-red-hover;
-        }
-
-        &:active {
-          background-color: #bd2130;
-        }
-      }
+      // Only keep styles that override .button-style if needed
+      // .export-btn, .import-btn, .clear-btn override styles can be added here if needed
     }
   }
 
