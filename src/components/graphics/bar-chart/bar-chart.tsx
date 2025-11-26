@@ -43,32 +43,32 @@ export class BarChart {
                   this.hoveredYear = row.time;
                   this.hoveredData = { principal: row.principal, additionalPrincipal: row.additionalPrincipal, interest: row.interest };
                 }}
-              // onMouseLeave={() => {
-              //   this.hoveredYear = null;
-              //   this.hoveredData = null;
-              // }}
+                onMouseLeave={() => {
+                  this.hoveredYear = null;
+                  this.hoveredData = null;
+                }}
               >
                 {this.hoveredYear === row.time && this.hoveredData && (
                   <div class="tooltip">
-                    <div class="tooltip-header">Year {row.time}</div>
                     <div class="tooltip-content">
                       <div class="tooltip-item interest">
-                        <span class="tooltip-label">Interest</span>
-                        <span class="tooltip-value">{formatCurrency(this.hoveredData.interest)}</span>
+                        <span class="tooltip-label">Interest:</span>
+                        <span class="tooltip-value interest-value">{formatCurrency(this.hoveredData.interest)}</span>
                       </div>
                       <div class="tooltip-item principal">
-                        <span class="tooltip-label">Principal</span>
-                        <span class="tooltip-value">{formatCurrency(this.hoveredData.principal)}</span>
+                        <span class="tooltip-label">Principal::</span>
+                        <span class="tooltip-value principal-value">{formatCurrency(this.hoveredData.principal)}</span>
                       </div>
                       {this.hoveredData.additionalPrincipal > 0 && (
                         <div class="tooltip-item additional">
                           <span class="tooltip-label">Additional</span>
-                          <span class="tooltip-value">{formatCurrency(this.hoveredData.additionalPrincipal)}</span>
+                          <span class="tooltip-value additional-value">{formatCurrency(this.hoveredData.additionalPrincipal)}</span>
                         </div>
                       )}
+                      <hr class="tooltip-separator" />
                       <div class="tooltip-total">
-                        <span class="tooltip-label">Total</span>
-                        <span class="tooltip-value">{formatCurrency(this.hoveredData.interest + this.hoveredData.principal + this.hoveredData.additionalPrincipal)}</span>
+                        <span class="tooltip-label">Total:</span>
+                        <span class="tooltip-value total-value">{formatCurrency(this.hoveredData.interest + this.hoveredData.principal + this.hoveredData.additionalPrincipal)}</span>
                       </div>
                     </div>
                     <div class="tooltip-arrow"></div>

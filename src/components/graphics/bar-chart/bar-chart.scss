@@ -1,3 +1,51 @@
+.tooltip-content {
+  padding-top: 8px;
+}
+.tooltip-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.tooltip-label {
+  color: #444;
+  font-weight: 500;
+  padding-right: 5px;
+}
+.tooltip-value.interest-value {
+  color: #eab308;
+  font-weight: 700;
+  font-size: 19px;
+}
+.tooltip-value.principal-value {
+  color: #22c55e;
+  font-weight: 700;
+  font-size: 19px;
+}
+.tooltip-value.additional-value {
+  color: #f59e0b;
+  font-weight: 700;
+  font-size: 19px;
+}
+.tooltip-separator {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 12px 0 10px 0;
+}
+.tooltip-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2563eb;
+}
+.tooltip-value.total-value {
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 20px;
+}
 .chart-container {
   margin-top: 20px;
   margin-bottom: 30px;
@@ -129,4 +177,46 @@
   transform: rotate(-45deg);
   transform-origin: center;
   font-size: 10px;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .x-axis-labels {
+    font-size: 9px;
+    margin-top: 7px;
+    gap: 0;
+    padding: 0 2px;
+    width: 100%;
+    min-width: 350px;
+    max-width: 100vw;
+  }
+  .x-axis-label {
+    font-size: 8px;
+    transform: rotate(-90deg);
+    padding: 0 1px;
+    min-width: 12px;
+    max-width: 18px;
+    word-break: break-word;
+    text-align: right;
+  }
+}
+
+@media (max-width: 520px) {
+  .x-axis-labels {
+    font-size: 6px;
+    margin-top: 0;
+    gap: 0;
+    margin-top: 7px;
+    width: 100%;
+    min-width: 120px;
+    max-width: 100vw;
+  }
+  .x-axis-label {
+    font-size: 5px;
+    padding: 0 0.5px;
+    min-width: 6px;
+    max-width: 18px;
+    word-break: break-word;
+    text-align: right;
+  }
 }
