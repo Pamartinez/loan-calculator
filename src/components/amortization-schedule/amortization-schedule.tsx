@@ -36,7 +36,7 @@ export class AmortizationSchedule {
                     onClosePopup={() => this.showPopup = false}
                 >
                     {this.selectedRow && (
-                        <schedule-view schedule={this.selectedRow.details} />
+                        <schedule-view schedule={this.selectedRow.details} style={{ "--chart-height": "150px" }} />
                     )}
                 </popup-modal>
             </div>

@@ -23,16 +23,16 @@ export class BarChart {
       return null;
     }
 
-    const maxAmount = Math.max(...this.schedule.map(row => row.principal + row.additionalPrincipal + row.interest));
 
     return (
       <div class="chart-container section">
         <h3 class="chart-title">Annual Payment Breakdown</h3>
         <div class="chart-bars">
           {this.schedule.map((row) => {
-            const principalHeight = (row.principal / maxAmount) * 100;
-            const additionalPrincipalHeight = (row.additionalPrincipal / maxAmount) * 100;
-            const interestHeight = (row.interest / maxAmount) * 100;
+            const amount = row.principal + row.additionalPrincipal + row.interest;
+            const principalHeight = (row.principal / amount) * 100;
+            const additionalPrincipalHeight = (row.additionalPrincipal / amount) * 100;
+            const interestHeight = (row.interest / amount) * 100;
 
             return (
               <div
@@ -43,10 +43,10 @@ export class BarChart {
                   this.hoveredYear = row.time;
                   this.hoveredData = { principal: row.principal, additionalPrincipal: row.additionalPrincipal, interest: row.interest };
                 }}
-                onMouseLeave={() => {
-                  this.hoveredYear = null;
-                  this.hoveredData = null;
-                }}
+              // onMouseLeave={() => {
+              //   this.hoveredYear = null;
+              //   this.hoveredData = null;
+              // }}
               >
                 {this.hoveredYear === row.time && this.hoveredData && (
                   <div class="tooltip">
@@ -71,7 +71,7 @@ export class BarChart {
                         <span class="tooltip-value">{formatCurrency(this.hoveredData.interest + this.hoveredData.principal + this.hoveredData.additionalPrincipal)}</span>
                       </div>
                     </div>
-                    <div class="tooltip-arrow" />
+                    <div class="tooltip-arrow"></div>
                   </div>
                 )}
                 <div

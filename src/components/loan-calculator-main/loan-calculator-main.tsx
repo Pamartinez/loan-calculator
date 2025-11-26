@@ -11,19 +11,19 @@ export class LoanCalculatorMain {
 
   private getTabs(): TabItem[] {
     return [
-      {
-        name: 'Legacy Calculator',
-        content: (
-          <div class="tab-panel">
-            <loan-calculator-app></loan-calculator-app>
-          </div>
-        ),
-      },
+
       {
         name: 'Amortization Calculator',
         content: (
           <div class="tab-panel">
             <loan-amortization-calculator></loan-amortization-calculator>
+          </div>
+        ),
+      }, {
+        name: 'Legacy Calculator',
+        content: (
+          <div class="tab-panel">
+            <loan-calculator-app></loan-calculator-app>
           </div>
         ),
       },
