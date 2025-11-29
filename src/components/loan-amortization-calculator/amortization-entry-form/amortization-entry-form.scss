@@ -1,0 +1,25 @@
+@import '../../../styles/buttonStyles';
+@import '../../../styles/card';
+@import '../../../styles/formStyles';
+
+.entry-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .amount {
+    font-weight: 600;
+    min-width: 120px;
+    @media (max-width: 640px) {
+      min-width: auto;
+      font-size: 0.9rem;
+    }
+  }
+  .date {
+    min-width: 80px;
+    @media (max-width: 640px) {
+      min-width: auto;
+      font-size: 0.875rem;
+    }
+  }
+}

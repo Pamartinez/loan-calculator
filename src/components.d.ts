@@ -6,17 +6,14 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AmortizationData, AmortizationRow, LoanFormData, NumericInputTypeEnum } from "./data/models";
+import { PaymentBreakdownData } from "./components/payment-breakdown-input/payment-breakdown-input";
 import { TabItem } from "./components/tabs-controller/tabs-controller";
 export { AmortizationData, AmortizationRow, LoanFormData, NumericInputTypeEnum } from "./data/models";
+export { PaymentBreakdownData } from "./components/payment-breakdown-input/payment-breakdown-input";
 export { TabItem } from "./components/tabs-controller/tabs-controller";
 export namespace Components {
-    interface AmortizationEntry {
-    }
-    interface AmortizationList {
-        /**
-          * @default []
-         */
-        "entries": AmortizationData[];
+    interface AmortizationEntryForm {
+        "entries"?: AmortizationData[];
     }
     interface AmortizationSchedule {
         /**
@@ -52,6 +49,16 @@ export namespace Components {
           * @default []
          */
         "schedule": AmortizationRow[];
+    }
+    interface ComponentList {
+        /**
+          * @default 'No records yet.'
+         */
+        "emptyMessage": string;
+        /**
+          * @default []
+         */
+        "items": (HTMLElement | Element)[];
     }
     interface CumulativePaymentGraph {
         /**
@@ -105,7 +112,7 @@ export namespace Components {
     interface LoanSummary {
         "loanData": LoanFormData;
     }
-    interface NumberInput {
+    interface NumericInput {
         /**
           * @default null
          */
@@ -114,6 +121,7 @@ export namespace Components {
           * @default 0
          */
         "min": number;
+        "name"?: string;
         /**
           * @default 2
          */
@@ -122,6 +130,7 @@ export namespace Components {
           * @default NumericInputTypeEnum.Integer
          */
         "numericInputType": NumericInputTypeEnum;
+        "placeholder"?: string;
         /**
           * @default ''
          */
@@ -137,12 +146,14 @@ export namespace Components {
          */
         "value": number;
     }
+    interface PaymentBreakdownInput {
+        "initialData"?: Partial<PaymentBreakdownData>;
+    }
     interface PayoffProgress {
         /**
           * @default []
          */
         "amortizationEntries": AmortizationData[];
-        "currentDate"?: string;
         "loanData": LoanFormData;
     }
     interface PieChart {
@@ -212,17 +223,17 @@ export namespace Components {
         "value": string;
     }
 }
-export interface AmortizationEntryCustomEvent<T> extends CustomEvent<T> {
+export interface AmortizationEntryFormCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLAmortizationEntryElement;
-}
-export interface AmortizationListCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAmortizationListElement;
+    target: HTMLAmortizationEntryFormElement;
 }
 export interface BarChartCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLBarChartElement;
+}
+export interface ComponentListCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLComponentListElement;
 }
 export interface DateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -236,9 +247,13 @@ export interface LoanSummaryCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLLoanSummaryElement;
 }
-export interface NumberInputCustomEvent<T> extends CustomEvent<T> {
+export interface NumericInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLNumberInputElement;
+    target: HTMLNumericInputElement;
+}
+export interface PaymentBreakdownInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPaymentBreakdownInputElement;
 }
 export interface PopupModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -257,39 +272,24 @@ export interface TextInputCustomEvent<T> extends CustomEvent<T> {
     target: HTMLTextInputElement;
 }
 declare global {
-    interface HTMLAmortizationEntryElementEventMap {
+    interface HTMLAmortizationEntryFormElementEventMap {
+        "updateEntries": AmortizationData[];
         "addEntry": AmortizationData;
-    }
-    interface HTMLAmortizationEntryElement extends Components.AmortizationEntry, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAmortizationEntryElementEventMap>(type: K, listener: (this: HTMLAmortizationEntryElement, ev: AmortizationEntryCustomEvent<HTMLAmortizationEntryElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAmortizationEntryElementEventMap>(type: K, listener: (this: HTMLAmortizationEntryElement, ev: AmortizationEntryCustomEvent<HTMLAmortizationEntryElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAmortizationEntryElement: {
-        prototype: HTMLAmortizationEntryElement;
-        new (): HTMLAmortizationEntryElement;
-    };
-    interface HTMLAmortizationListElementEventMap {
         "deleteEntry": string;
     }
-    interface HTMLAmortizationListElement extends Components.AmortizationList, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAmortizationListElementEventMap>(type: K, listener: (this: HTMLAmortizationListElement, ev: AmortizationListCustomEvent<HTMLAmortizationListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLAmortizationEntryFormElement extends Components.AmortizationEntryForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAmortizationEntryFormElementEventMap>(type: K, listener: (this: HTMLAmortizationEntryFormElement, ev: AmortizationEntryFormCustomEvent<HTMLAmortizationEntryFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAmortizationListElementEventMap>(type: K, listener: (this: HTMLAmortizationListElement, ev: AmortizationListCustomEvent<HTMLAmortizationListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAmortizationEntryFormElementEventMap>(type: K, listener: (this: HTMLAmortizationEntryFormElement, ev: AmortizationEntryFormCustomEvent<HTMLAmortizationEntryFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLAmortizationListElement: {
-        prototype: HTMLAmortizationListElement;
-        new (): HTMLAmortizationListElement;
+    var HTMLAmortizationEntryFormElement: {
+        prototype: HTMLAmortizationEntryFormElement;
+        new (): HTMLAmortizationEntryFormElement;
     };
     interface HTMLAmortizationScheduleElement extends Components.AmortizationSchedule, HTMLStencilElement {
     }
@@ -337,6 +337,23 @@ declare global {
     var HTMLBarChartElement: {
         prototype: HTMLBarChartElement;
         new (): HTMLBarChartElement;
+    };
+    interface HTMLComponentListElementEventMap {
+        "deleteItem": number;
+    }
+    interface HTMLComponentListElement extends Components.ComponentList, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLComponentListElementEventMap>(type: K, listener: (this: HTMLComponentListElement, ev: ComponentListCustomEvent<HTMLComponentListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLComponentListElementEventMap>(type: K, listener: (this: HTMLComponentListElement, ev: ComponentListCustomEvent<HTMLComponentListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLComponentListElement: {
+        prototype: HTMLComponentListElement;
+        new (): HTMLComponentListElement;
     };
     interface HTMLCumulativePaymentGraphElement extends Components.CumulativePaymentGraph, HTMLStencilElement {
     }
@@ -439,22 +456,40 @@ declare global {
         prototype: HTMLLoanSummaryElement;
         new (): HTMLLoanSummaryElement;
     };
-    interface HTMLNumberInputElementEventMap {
-        "valueChange": { value: number; propertyName: string };
+    interface HTMLNumericInputElementEventMap {
+        "valueChange": number;
     }
-    interface HTMLNumberInputElement extends Components.NumberInput, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLNumberInputElementEventMap>(type: K, listener: (this: HTMLNumberInputElement, ev: NumberInputCustomEvent<HTMLNumberInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLNumericInputElement extends Components.NumericInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLNumericInputElementEventMap>(type: K, listener: (this: HTMLNumericInputElement, ev: NumericInputCustomEvent<HTMLNumericInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLNumberInputElementEventMap>(type: K, listener: (this: HTMLNumberInputElement, ev: NumberInputCustomEvent<HTMLNumberInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLNumericInputElementEventMap>(type: K, listener: (this: HTMLNumericInputElement, ev: NumericInputCustomEvent<HTMLNumericInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLNumberInputElement: {
-        prototype: HTMLNumberInputElement;
-        new (): HTMLNumberInputElement;
+    var HTMLNumericInputElement: {
+        prototype: HTMLNumericInputElement;
+        new (): HTMLNumericInputElement;
+    };
+    interface HTMLPaymentBreakdownInputElementEventMap {
+        "paymentChange": PaymentBreakdownData;
+        "customSubmit": PaymentBreakdownData;
+    }
+    interface HTMLPaymentBreakdownInputElement extends Components.PaymentBreakdownInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPaymentBreakdownInputElementEventMap>(type: K, listener: (this: HTMLPaymentBreakdownInputElement, ev: PaymentBreakdownInputCustomEvent<HTMLPaymentBreakdownInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPaymentBreakdownInputElementEventMap>(type: K, listener: (this: HTMLPaymentBreakdownInputElement, ev: PaymentBreakdownInputCustomEvent<HTMLPaymentBreakdownInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPaymentBreakdownInputElement: {
+        prototype: HTMLPaymentBreakdownInputElement;
+        new (): HTMLPaymentBreakdownInputElement;
     };
     interface HTMLPayoffProgressElement extends Components.PayoffProgress, HTMLStencilElement {
     }
@@ -549,14 +584,14 @@ declare global {
         new (): HTMLTextInputElement;
     };
     interface HTMLElementTagNameMap {
-        "amortization-entry": HTMLAmortizationEntryElement;
-        "amortization-list": HTMLAmortizationListElement;
+        "amortization-entry-form": HTMLAmortizationEntryFormElement;
         "amortization-schedule": HTMLAmortizationScheduleElement;
         "amortization-schedule-base": HTMLAmortizationScheduleBaseElement;
         "amortization-schedule-with-additional": HTMLAmortizationScheduleWithAdditionalElement;
         "amortization-schedule-without-additional": HTMLAmortizationScheduleWithoutAdditionalElement;
         "balance-graph": HTMLBalanceGraphElement;
         "bar-chart": HTMLBarChartElement;
+        "component-list": HTMLComponentListElement;
         "cumulative-payment-graph": HTMLCumulativePaymentGraphElement;
         "date-input": HTMLDateInputElement;
         "export-json-controller": HTMLExportJsonControllerElement;
@@ -568,7 +603,8 @@ declare global {
         "loan-details": HTMLLoanDetailsElement;
         "loan-report": HTMLLoanReportElement;
         "loan-summary": HTMLLoanSummaryElement;
-        "number-input": HTMLNumberInputElement;
+        "numeric-input": HTMLNumericInputElement;
+        "payment-breakdown-input": HTMLPaymentBreakdownInputElement;
         "payoff-progress": HTMLPayoffProgressElement;
         "pie-chart": HTMLPieChartElement;
         "popup-modal": HTMLPopupModalElement;
@@ -580,15 +616,11 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-    interface AmortizationEntry {
-        "onAddEntry"?: (event: AmortizationEntryCustomEvent<AmortizationData>) => void;
-    }
-    interface AmortizationList {
-        /**
-          * @default []
-         */
+    interface AmortizationEntryForm {
         "entries"?: AmortizationData[];
-        "onDeleteEntry"?: (event: AmortizationListCustomEvent<string>) => void;
+        "onAddEntry"?: (event: AmortizationEntryFormCustomEvent<AmortizationData>) => void;
+        "onDeleteEntry"?: (event: AmortizationEntryFormCustomEvent<string>) => void;
+        "onUpdateEntries"?: (event: AmortizationEntryFormCustomEvent<AmortizationData[]>) => void;
     }
     interface AmortizationSchedule {
         /**
@@ -625,6 +657,17 @@ declare namespace LocalJSX {
           * @default []
          */
         "schedule"?: AmortizationRow[];
+    }
+    interface ComponentList {
+        /**
+          * @default 'No records yet.'
+         */
+        "emptyMessage"?: string;
+        /**
+          * @default []
+         */
+        "items"?: (HTMLElement | Element)[];
+        "onDeleteItem"?: (event: ComponentListCustomEvent<number>) => void;
     }
     interface CumulativePaymentGraph {
         /**
@@ -682,7 +725,7 @@ declare namespace LocalJSX {
         "onDeleteLoan"?: (event: LoanSummaryCustomEvent<string>) => void;
         "onSummaryTabChange"?: (event: LoanSummaryCustomEvent<{ loanId: string; tabIndex: number }>) => void;
     }
-    interface NumberInput {
+    interface NumericInput {
         /**
           * @default null
          */
@@ -691,6 +734,7 @@ declare namespace LocalJSX {
           * @default 0
          */
         "min"?: number;
+        "name"?: string;
         /**
           * @default 2
          */
@@ -699,7 +743,8 @@ declare namespace LocalJSX {
           * @default NumericInputTypeEnum.Integer
          */
         "numericInputType"?: NumericInputTypeEnum;
-        "onValueChange"?: (event: NumberInputCustomEvent<{ value: number; propertyName: string }>) => void;
+        "onValueChange"?: (event: NumericInputCustomEvent<number>) => void;
+        "placeholder"?: string;
         /**
           * @default ''
          */
@@ -713,12 +758,16 @@ declare namespace LocalJSX {
          */
         "value"?: number;
     }
+    interface PaymentBreakdownInput {
+        "initialData"?: Partial<PaymentBreakdownData>;
+        "onCustomSubmit"?: (event: PaymentBreakdownInputCustomEvent<PaymentBreakdownData>) => void;
+        "onPaymentChange"?: (event: PaymentBreakdownInputCustomEvent<PaymentBreakdownData>) => void;
+    }
     interface PayoffProgress {
         /**
           * @default []
          */
         "amortizationEntries"?: AmortizationData[];
-        "currentDate"?: string;
         "loanData"?: LoanFormData;
     }
     interface PieChart {
@@ -790,14 +839,14 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface IntrinsicElements {
-        "amortization-entry": AmortizationEntry;
-        "amortization-list": AmortizationList;
+        "amortization-entry-form": AmortizationEntryForm;
         "amortization-schedule": AmortizationSchedule;
         "amortization-schedule-base": AmortizationScheduleBase;
         "amortization-schedule-with-additional": AmortizationScheduleWithAdditional;
         "amortization-schedule-without-additional": AmortizationScheduleWithoutAdditional;
         "balance-graph": BalanceGraph;
         "bar-chart": BarChart;
+        "component-list": ComponentList;
         "cumulative-payment-graph": CumulativePaymentGraph;
         "date-input": DateInput;
         "export-json-controller": ExportJsonController;
@@ -809,7 +858,8 @@ declare namespace LocalJSX {
         "loan-details": LoanDetails;
         "loan-report": LoanReport;
         "loan-summary": LoanSummary;
-        "number-input": NumberInput;
+        "numeric-input": NumericInput;
+        "payment-breakdown-input": PaymentBreakdownInput;
         "payoff-progress": PayoffProgress;
         "pie-chart": PieChart;
         "popup-modal": PopupModal;
@@ -824,14 +874,14 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "amortization-entry": LocalJSX.AmortizationEntry & JSXBase.HTMLAttributes<HTMLAmortizationEntryElement>;
-            "amortization-list": LocalJSX.AmortizationList & JSXBase.HTMLAttributes<HTMLAmortizationListElement>;
+            "amortization-entry-form": LocalJSX.AmortizationEntryForm & JSXBase.HTMLAttributes<HTMLAmortizationEntryFormElement>;
             "amortization-schedule": LocalJSX.AmortizationSchedule & JSXBase.HTMLAttributes<HTMLAmortizationScheduleElement>;
             "amortization-schedule-base": LocalJSX.AmortizationScheduleBase & JSXBase.HTMLAttributes<HTMLAmortizationScheduleBaseElement>;
             "amortization-schedule-with-additional": LocalJSX.AmortizationScheduleWithAdditional & JSXBase.HTMLAttributes<HTMLAmortizationScheduleWithAdditionalElement>;
             "amortization-schedule-without-additional": LocalJSX.AmortizationScheduleWithoutAdditional & JSXBase.HTMLAttributes<HTMLAmortizationScheduleWithoutAdditionalElement>;
             "balance-graph": LocalJSX.BalanceGraph & JSXBase.HTMLAttributes<HTMLBalanceGraphElement>;
             "bar-chart": LocalJSX.BarChart & JSXBase.HTMLAttributes<HTMLBarChartElement>;
+            "component-list": LocalJSX.ComponentList & JSXBase.HTMLAttributes<HTMLComponentListElement>;
             "cumulative-payment-graph": LocalJSX.CumulativePaymentGraph & JSXBase.HTMLAttributes<HTMLCumulativePaymentGraphElement>;
             "date-input": LocalJSX.DateInput & JSXBase.HTMLAttributes<HTMLDateInputElement>;
             "export-json-controller": LocalJSX.ExportJsonController & JSXBase.HTMLAttributes<HTMLExportJsonControllerElement>;
@@ -843,7 +893,8 @@ declare module "@stencil/core" {
             "loan-details": LocalJSX.LoanDetails & JSXBase.HTMLAttributes<HTMLLoanDetailsElement>;
             "loan-report": LocalJSX.LoanReport & JSXBase.HTMLAttributes<HTMLLoanReportElement>;
             "loan-summary": LocalJSX.LoanSummary & JSXBase.HTMLAttributes<HTMLLoanSummaryElement>;
-            "number-input": LocalJSX.NumberInput & JSXBase.HTMLAttributes<HTMLNumberInputElement>;
+            "numeric-input": LocalJSX.NumericInput & JSXBase.HTMLAttributes<HTMLNumericInputElement>;
+            "payment-breakdown-input": LocalJSX.PaymentBreakdownInput & JSXBase.HTMLAttributes<HTMLPaymentBreakdownInputElement>;
             "payoff-progress": LocalJSX.PayoffProgress & JSXBase.HTMLAttributes<HTMLPayoffProgressElement>;
             "pie-chart": LocalJSX.PieChart & JSXBase.HTMLAttributes<HTMLPieChartElement>;
             "popup-modal": LocalJSX.PopupModal & JSXBase.HTMLAttributes<HTMLPopupModalElement>;

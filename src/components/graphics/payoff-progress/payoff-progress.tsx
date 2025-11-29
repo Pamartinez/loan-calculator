@@ -1,7 +1,7 @@
 import { Component, h, Prop } from '@stencil/core';
 import { LoanFormData, AmortizationData } from '../../../data/models';
 import { calculateAmortization } from '../../../utils/amortization';
-import { formatCurrencyWhole } from '../../../utils/utils';
+import { formatCurrency } from '../../../utils/utils';
 
 @Component({
   tag: 'payoff-progress',
@@ -11,8 +11,6 @@ import { formatCurrencyWhole } from '../../../utils/utils';
 export class PayoffProgress {
   @Prop() loanData: LoanFormData;
   @Prop() amortizationEntries: AmortizationData[] = [];
-  @Prop() currentDate?: string; // Format: YYYY-MM
-
   private calculateProgress() {
     if (!this.loanData || !this.loanData.loanAmount || !this.loanData.startDate) {
       return null;
@@ -20,12 +18,14 @@ export class PayoffProgress {
 
     const schedule = calculateAmortization(this.loanData, this.amortizationEntries);
     const totalYears = schedule.length;
-
     // Calculate years passed
-    const startDate = new Date(this.loanData.startDate + '-01');
-    const current = this.currentDate ? new Date(this.currentDate + '-01') : new Date();
-    const yearsPassed = (current.getFullYear() - startDate.getFullYear()) +
+    const startDate = new Date(this.loanData.startDate);
+    const current = new Date();
+    // Raw years passed may be negative if the start date is in the future.
+    const yearsPassedRaw = (current.getFullYear() - startDate.getFullYear()) +
       (current.getMonth() - startDate.getMonth()) / 12;
+    // Clamp to 0 so future start dates report 0% progress instead of breaking.
+    const yearsPassed = Math.max(yearsPassedRaw, 0);
 
     const percentComplete = Math.min(Math.max((yearsPassed / totalYears) * 100, 0), 100);
     const yearsRemaining = Math.max(totalYears - yearsPassed, 0);
@@ -33,10 +33,12 @@ export class PayoffProgress {
     // Calculate actual amount paid from schedule
     const totalLoanAmount = this.loanData.loanAmount;
     const currentYearIndex = Math.floor(yearsPassed);
-
     // Get remaining balance from schedule at current point
     let principalRemaining = totalLoanAmount;
-    if (currentYearIndex < schedule.length) {
+    if (currentYearIndex < 0) {
+      // Start date in the future: nothing paid yet.
+      principalRemaining = totalLoanAmount;
+    } else if (currentYearIndex < schedule.length) {
       const currentYearData = schedule[currentYearIndex];
       principalRemaining = currentYearData.remainingBalance;
     } else if (schedule.length > 0) {
@@ -85,11 +87,11 @@ export class PayoffProgress {
           </div>
           <div class="stat">
             <div class="stat-label">Principal Paid</div>
-            <div class="stat-value">{formatCurrencyWhole(progress.principalPaid)}</div>
+            <div class="stat-value">{formatCurrency(progress.principalPaid)}</div>
           </div>
           <div class="stat">
             <div class="stat-label">Principal Remaining</div>
-            <div class="stat-value">{formatCurrencyWhole(progress.principalRemaining)}</div>
+            <div class="stat-value">{formatCurrency(progress.principalRemaining)}</div>
           </div>
         </div>
 

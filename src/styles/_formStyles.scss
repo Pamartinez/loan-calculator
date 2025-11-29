@@ -1,0 +1,94 @@
+.form-grid {
+  .flex-column {
+    display: flex;
+    gap: 8px;
+    flex: 1 1 1;
+    height: -webkit-fill-available;
+    justify-content: end;
+  }
+
+  /* Three column grouping for loan detail sections */
+  .form-row-columns {
+    grid-column: 1 / -1; /* span full grid width */
+    display: flex;
+    flex-direction: column; /* stack rows on top of each other */
+    gap: 16px;
+    align-items: stretch;
+    width: 100%;
+
+    .row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+      flex-wrap: wrap;
+
+      .input-wrapper,
+      .input-wrapper.flex-column {
+        width: 100%;
+      }
+
+      .input-wrapper > *,
+      .input-wrapper.flex-column > * {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .input-wrapper {
+        width: 100%;
+        & > * {
+          box-sizing: border-box;
+        }
+      }
+
+      label {
+        text-transform: uppercase;
+        white-space: normal;
+        display: block;
+        text-align: left;
+      }
+
+      .column {
+        @extend .flex-column;
+        flex-direction: column;
+        min-width: 0;
+        label {
+          font-weight: 600;
+          font-size: 13px;
+          color: #2d3748;
+          letter-spacing: 0.6px;
+        }
+      }
+
+      &.button-container {
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        align-self: end; /* ensure button aligns to bottom of grid cell */
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .form-grid {
+    .row {
+      gap: 10px;
+      .column {
+        flex: 1 1 100%;
+        min-width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 451px) {
+  .form-grid {
+    .row {
+      .column {
+        flex: 1 1 0;
+        max-width: none;
+      }
+    }
+  }
+}

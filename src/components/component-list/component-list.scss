@@ -1,16 +1,24 @@
-@import '../../../styles/buttonStyles';
+@import '../../styles/variables';
 
-.amortization-list {
+.component-list {
   margin-top: 1rem;
-
   &.empty {
+    height: var(--container-height, 259px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     padding: 2rem;
-    color: #666;
+    color: #6b7280; /* neutral-600 */
+    background-color: #fafafa;
+    border: 1px dashed #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
   .list-container {
-    max-height: 300px;
+    height: var(--container-height, 259px);
     overflow-y: auto;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -34,7 +42,7 @@
       }
     }
 
-    .entry-item {
+    .component-list-item {
       display: flex;
       align-items: center;
       gap: 1rem;
@@ -53,27 +61,6 @@
 
       &:hover {
         background-color: #f9f9f9;
-      }
-
-      .amount {
-        font-weight: 600;
-        color: #333;
-        min-width: 120px;
-
-        @media (max-width: 640px) {
-          min-width: auto;
-          font-size: 0.9rem;
-        }
-      }
-
-      .date {
-        color: #666;
-        min-width: 80px;
-
-        @media (max-width: 640px) {
-          min-width: auto;
-          font-size: 0.875rem;
-        }
       }
 
       .delete-button {
@@ -107,6 +94,7 @@
           padding: 2px;
           background: linear-gradient(135deg, $danger-red, $danger-red-hover);
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;
           opacity: 0;

@@ -1,5 +1,6 @@
 import { Config } from '@stencil/core';
 import { sass } from '@stencil/sass';
+import { inlineSvg } from 'stencil-inline-svg';
 
 export const config: Config = {
   namespace: 'loan-calculator',
@@ -25,6 +26,7 @@ export const config: Config = {
   plugins: [
     sass({
       injectGlobalPaths: ['src/styles/_variables.scss', 'src/styles/global.scss']
-    })
+    }),
+    inlineSvg()
   ]
 };

@@ -1,7 +1,7 @@
 import { Component, h, Prop, Element } from '@stencil/core';
 import { LoanFormData, AmortizationData } from '../../../data/models';
 import { calculateAmortization } from '../../../utils/amortization';
-import { formatCurrencyWhole } from '../../../utils/utils';
+import { formatCurrency } from '../../../utils/utils';
 
 @Component({
   tag: 'savings-comparison-graph',
@@ -165,7 +165,7 @@ export class SavingsComparisonGraph {
         ctx.stroke();
 
         // Value on top with background
-        const valueText = formatCurrencyWhole(value);
+        const valueText = formatCurrency(value);
         ctx.font = `bold ${isSmall ? 13 : 15}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'bottom';
@@ -235,7 +235,7 @@ export class SavingsComparisonGraph {
       ctx.fillText('💰 SAVINGS', savingsX, savingsY - (isXSmall ? 16 : isSmall ? 17 : isMedium ? 18 : isLarge ? 20 : 22));
 
       ctx.font = `bold ${isXSmall ? 11 : isSmall ? 12 : isMedium ? 13 : isLarge ? 14 : 16}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
-      ctx.fillText(formatCurrencyWhole(interestSaved), savingsX, savingsY + 2);
+      ctx.fillText(formatCurrency(interestSaved), savingsX, savingsY + 2);
 
       ctx.font = `600 ${isXSmall ? 9 : isSmall ? 10 : isMedium ? 11 : isLarge ? 12 : 14}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
       ctx.fillText(`⏱️ ${timeSaved} months`, savingsX, savingsY + (isXSmall ? 16 : isSmall ? 17 : isMedium ? 18 : isLarge ? 19 : 22));
@@ -305,7 +305,7 @@ export class SavingsComparisonGraph {
             <div class="metric-icon">💵</div>
             <div class="metric-content">
               <span class="metric-label">Total Interest Saved</span>
-              <span class="metric-value">{formatCurrencyWhole(interestSaved)}</span>
+              <span class="metric-value">{formatCurrency(interestSaved)}</span>
             </div>
           </div>
 

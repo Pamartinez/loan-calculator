@@ -1,97 +1,99 @@
 @import '../../styles/buttonStyles';
+@import '../../styles/card';
+@import '../../styles/formStyles';
+@import '../../styles/inputStyles';
 
 .loan-calculator {
-  padding: 0;
-  max-width: 640px;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: #ffffff;
   padding: 16px;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  max-width: 100%;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-@media screen and (max-width: 600px) {
-  .form-container {
-    max-width: 98vw;
-    width: 100%;
-    margin: 0 auto;
-    padding: 12px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  }
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  align-items: end;
-}
-
-.form-group {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 8px;
 
-  label {
-    font-weight: 600;
-    font-size: 13px;
-    color: #2d3748;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-  }
+  /* Unified grid layout replacing multiple row wrappers */
 
-  .input-wrapper {
-    display: flex;
-    align-items: center;
-    position: relative;
-    white-space: nowrap;
-    gap: 8px;
-  }
-
-  .prefix,
-  .suffix {
-    font-weight: 600;
-    font-size: 16px;
-    color: #6b7280;
-    flex-shrink: 0;
-  }
-
-  &.full-width {
-    grid-column: 1 / -1;
+  .full-width {
     padding-bottom: 12px;
     border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 12px;
+  }
+
+  .form-grid {
+    .flex-column {
+      display: flex;
+      gap: 8px;
+      flex: 1 1 0;
+    }
+    .row {
+      .input-wrapper,
+      .input-wrapper.flex-column {
+        width: 100%;
+      }
+      .input-wrapper > *,
+      .input-wrapper.flex-column > * {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .input-wrapper {
+        width: 100%;
+        & > * {
+          box-sizing: border-box;
+        }
+      }
+      .column {
+        .input-wrapper {
+          display: flex;
+          align-items: center;
+          position: relative;
+          white-space: nowrap;
+          .control {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            & > * {
+              min-width: 0;
+            }
+          }
+        }
+        .prefix {
+          margin-right: 4px;
+        }
+        .suffix {
+          margin-left: 8px;
+        }
+        .prefix,
+        .suffix {
+          font-weight: 600;
+          font-size: 16px;
+          color: #6b7280;
+          flex: 0 0 auto;
+          text-align: center;
+          display: flex;
+          align-items: center;
+          white-space: nowrap;
+          line-height: 1;
+        }
+      }
+    }
   }
 }
 
-.button-container {
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-}
-
-.button-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-// Improve spacing specific to the last row where the button resides
-.form-row:last-child {
-  align-items: center;
-}
-
-// Make select input visually consistent width
-select.input-style {
-  height: 36px;
-  border-radius: 8px;
+@media screen and (max-width: 460px) {
+  .form-grid {
+    .row {
+      .input-wrapper {
+        width: 100%;
+        flex-wrap: nowrap;
+        .control {
+          min-width: 0;
+        }
+        .suffix,
+        .prefix {
+          flex: 0 0 auto;
+          max-width: 20%;
+          align-items: center;
+        }
+      }
+    }
+  }
 }

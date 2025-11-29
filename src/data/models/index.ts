@@ -2,6 +2,7 @@ export enum NumericInputTypeEnum {
   Integer = 'Integer',
   Decimal = 'Decimal',
   Percentage = 'Percentage',
+  Currency = 'Currency',
 }
 
 export interface LoanFormData {

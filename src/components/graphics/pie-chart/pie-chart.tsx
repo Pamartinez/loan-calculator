@@ -1,6 +1,6 @@
 import { Component, h, Prop, Element, State } from '@stencil/core';
 import { AmortizationRow } from '../../../data/models';
-import { formatCurrencyWhole } from '../../../utils/utils';
+import { formatCurrency } from '../../../utils/utils';
 
 @Component({
   tag: 'pie-chart',
@@ -318,7 +318,7 @@ export class PieChart {
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
-    const principalText = `Principal: ${formatCurrencyWhole(totalPrincipal)} (${principalPercent.toFixed(1)}%)`;
+    const principalText = `Principal: ${formatCurrency(totalPrincipal)} (${principalPercent.toFixed(1)}%)`;
     ctx.fillText(principalText, legendX + 34, legendY + 12);
 
     // Interest legend
@@ -328,7 +328,7 @@ export class PieChart {
     ctx.fill();
 
     ctx.fillStyle = '#212529';
-    const interestText = `Interest: ${formatCurrencyWhole(totalInterest)} (${interestPercent.toFixed(1)}%)`;
+    const interestText = `Interest: ${formatCurrency(totalInterest)} (${interestPercent.toFixed(1)}%)`;
     ctx.fillText(interestText, legendX + 34, legendY + legendItemHeight + 12);
 
     // Title with improved styling

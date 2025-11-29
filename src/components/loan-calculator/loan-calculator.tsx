@@ -13,7 +13,7 @@ export class LoanCalculator {
     @Event() formValidityChange: EventEmitter<boolean>;
     @Event() formSubmit: EventEmitter<LoanFormData>;
 
-    private inputRefs: (HTMLTextInputElement | HTMLNumberInputElement)[] = [];
+    private inputRefs: (HTMLTextInputElement | HTMLNumericInputElement)[] = [];
 
     @State() formData: LoanFormData = {
         id: null,
@@ -53,6 +53,7 @@ export class LoanCalculator {
             ...this.formData,
             [propertyName]: value,
         };
+        console.log('Form Data Updated:', this.formData);
     }
 
     @Method()
@@ -82,16 +83,13 @@ export class LoanCalculator {
     private renderNumberInput(
         label: string,
         propertyName: keyof LoanFormData,
-        prefix: string | null = null,
-        suffix: string | null = null,
-        numberOfDecimalsAllowed: number = 2
+        numericInputType: NumericInputTypeEnum = NumericInputTypeEnum.Currency
     ) {
         return (
-            <div class="form-group">
+            <div class="column">
                 <label htmlFor={propertyName}>{label}</label>
                 <div class="input-wrapper">
-                    {prefix && <span class="prefix">{prefix}</span>}
-                    <number-input
+                    <numeric-input
                         ref={el => {
                             if (el && !this.inputRefs.includes(el)) {
                                 this.inputRefs.push(el);
@@ -99,94 +97,100 @@ export class LoanCalculator {
                         }}
                         value={this.formData[propertyName] as number}
                         propertyName={propertyName}
-                        numericInputType={NumericInputTypeEnum.Decimal}
-                        numberOfDecimalsAllowed={numberOfDecimalsAllowed}
-                        onValueChange={(e) => this.handleValueChange(propertyName, e.detail.value)}
+                        numericInputType={numericInputType}
+                        onValueChange={(e) => this.handleValueChange(propertyName, e.detail)}
                     />
-                    {suffix && <span class="suffix">{suffix}</span>}
                 </div>
             </div>
         );
     }
 
+    private renderStartDateInput() {
+        return (
+            <div class="column">
+                <label htmlFor="startDate" >Start Date</label>
+                <div class="input-wrapper">
+                    <date-input
+                        style={{ '--input-width': '150px' }}
+                        value={this.formData.startDate || ''}
+                        inputId="startDate"
+                        onDateChange={(e) => this.handleValueChange('startDate', e.detail)}
+                    />
+                </div>
+            </div>
+        )
+    }
     render() {
         return (
-            <div class="loan-calculator">
-                <div class="form-container">
-                    {/* Display Name - Full Width */}
-                    <div class="form-group full-width">
-                        <label htmlFor="displayName">Display Name</label>
-                        <div class="input-wrapper">
-                            <text-input
-                                ref={el => {
-                                    if (el && !this.inputRefs.includes(el)) {
-                                        this.inputRefs.push(el);
-                                    }
-                                }}
-                                value={this.formData.displayName}
-                                propertyName="displayName"
-                                disabled={this.isEditMode}
-                                onValueChange={(e) => this.handleValueChange('displayName', e.detail.value)}
-                            />
-                        </div>
-                    </div>
+            <div class="loan-calculator card">
 
-                    {/* First Row - Loan Amount and Rate */}
-                    <div class="form-row">
-                        {this.renderNumberInput('Loan Amount', 'loanAmount', '$')}
-                        {this.renderNumberInput('Rate', 'rate', null, '%', 3)}
-                    </div>
-
-                    {/* Second Row - Total Monthly Payment and Escrow */}
-                    <div class="form-row">
-                        {this.renderNumberInput('Total Monthly Payment', 'totalMonthlyPayment', '$')}
-                        {this.renderNumberInput('Escrow', 'escrow', '$')}
-                    </div>
-
-                    {/* Third Row - Additional Principal and Loan Terms */}
-                    <div class="form-row">
-                        {!this.hideAdditionalPrincipal && this.renderNumberInput('Additional Principal', 'additionalPrincipal', '$')}
-                        <div class="form-group">
-                            <label htmlFor="loanTerms">Loan Terms</label>
-                            <div class="input-wrapper" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                <number-input
+                <h2>Loan Details</h2>
+                {/* Unified Grid Layout */}
+                <div class="form-grid">
+                    <div class="row full-width">
+                        <div class="column">
+                            <label htmlFor="displayName">Display Name</label>
+                            <div class="input-wrapper">
+                                <text-input
                                     ref={el => {
                                         if (el && !this.inputRefs.includes(el)) {
                                             this.inputRefs.push(el);
                                         }
                                     }}
-                                    style={{ '--input-width': '100px' }}
-                                    value={this.formData.loanTermsTime}
-                                    propertyName="loanTermsTime"
-                                    numericInputType={NumericInputTypeEnum.Integer}
-                                    numberOfDecimalsAllowed={0}
-                                    onValueChange={(e) => this.handleValueChange('loanTermsTime', e.detail.value)}
+                                    value={this.formData.displayName}
+                                    propertyName="displayName"
+                                    disabled={this.isEditMode}
+                                    onValueChange={(e) => this.handleValueChange('displayName', e.detail.value)}
                                 />
-                                <select
-                                    class="input-style"
-                                    onInput={(e) => this.handleValueChange('loanTermsType', (e.target as HTMLSelectElement).value)}
-                                    style={{ width: '100px' }}
-                                >
-                                    <option value="years" selected={this.formData.loanTermsType === 'years'}>Years</option>
-                                    <option value="months" selected={this.formData.loanTermsType === 'months'}>Months</option>
-                                </select>
                             </div>
                         </div>
                     </div>
 
-                    {/* Fourth Row - Start Date and Button */}
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label htmlFor="startDate">Start Date</label>
-                            <div class="input-wrapper">
-                                <date-input
-                                    value={this.formData.startDate || ''}
-                                    inputId="startDate"
-                                    onDateChange={(e) => this.handleValueChange('startDate', e.detail)}
-                                />
-                            </div>
+                    <div class="form-row-columns">
+                        <div class="row">
+                            {this.renderNumberInput('Loan Amount', 'loanAmount')}
+                            {this.renderNumberInput('Rate', 'rate', NumericInputTypeEnum.Percentage)}
                         </div>
-                        <div class="form-group button-container">
+                        <div class="row">
+                            {this.renderNumberInput('Total Monthly Payment', 'totalMonthlyPayment')}
+                            {this.renderNumberInput('Escrow', 'escrow')}
+                        </div>
+                        <div class="row">
+                            {!this.hideAdditionalPrincipal && this.renderNumberInput('Additional Principal', 'additionalPrincipal')}
+                            <div class="column">
+                                <label htmlFor="loanTerms">Loan Terms</label>
+                                <div class="input-wrapper flex-column" style={{ width: '159px' }}>
+                                    <numeric-input
+                                        ref={el => {
+                                            if (el && !this.inputRefs.includes(el)) {
+                                                this.inputRefs.push(el);
+                                            }
+                                        }}
+                                        style={{ '--input-width': '80px', marginRight: '8px' }}
+                                        value={this.formData.loanTermsTime}
+                                        propertyName="loanTermsTime"
+                                        numericInputType={NumericInputTypeEnum.Integer}
+                                        numberOfDecimalsAllowed={0}
+                                        onValueChange={(e) => this.handleValueChange('loanTermsTime', e.detail)}
+                                    />
+                                    <select
+                                        class="input-style"
+                                        onInput={(e) => this.handleValueChange('loanTermsType', (e.target as HTMLSelectElement).value)}
+                                        style={{ width: '170px' }}
+                                    >
+                                        <option value="years" selected={this.formData.loanTermsType === 'years'}>Years</option>
+                                        <option value="months" selected={this.formData.loanTermsType === 'months'}>Months</option>
+                                    </select>
+                                </div>
+                            </div>
+                            {this.hideAdditionalPrincipal && (this.renderStartDateInput())}
+                        </div>
+                        {!this.hideAdditionalPrincipal && (
+                            <div class="row">
+                                {this.renderStartDateInput()}
+                            </div>
+                        )}
+                        <div class="row button-container">
                             <button
                                 class={` ${this.isEditMode ? 'button-style-edit' : 'button-style-add'}`}
                                 onClick={() => this.handleAddClick()}

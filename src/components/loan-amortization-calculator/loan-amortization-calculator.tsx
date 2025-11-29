@@ -1,114 +1,117 @@
 import { Component, h, State } from '@stencil/core';
 import { LoanFormData, AmortizationData } from '../../data/models';
+import { loadFromLocalStorage, saveToLocalStorage, STORAGE_KEYS } from '../../utils/local-storage-helper';
+
+interface AmortizationCalculatorData {
+    currentLoanData: LoanFormData;
+    amortizationEntries: AmortizationData[];
+}
 
 @Component({
     tag: 'loan-amortization-calculator',
     styleUrl: 'loan-amortization-calculator.scss',
     shadow: true,
 })
+
 export class LoanAmortizationCalculator {
-    @State() currentLoanData: LoanFormData = {
-        id: 'current-loan-id',
-        displayName: 'Current Loan',
-        loanAmount: 474000,
-        rate: 7,
-        totalMonthlyPayment: 3913.45,
-        escrow: 739.9,
-        additionalPrincipal: 0,
-        startDate: '2023-07',
-        loanTermsTime: 30
-    };
-    @State() amortizationEntries: AmortizationData[] = [
-        {
-            id: 'default-1',
-            amount: 3800,
-            date: '2024-11'
+    @State() data: AmortizationCalculatorData = {
+        currentLoanData: {
+            id: 'current-loan-id',
+            displayName: 'Current Loan',
+            loanAmount: 474000,
+            rate: 7,
+            totalMonthlyPayment: 3913.45,
+            escrow: 739.9,
+            additionalPrincipal: 0,
+            startDate: '2023-07',
+            loanTermsTime: 30
         },
-        {
-            id: 'default-2',
-            amount: 3800,
-            date: '2025-10'
-        }
-    ];
+        amortizationEntries: [
+            { id: 'default-1', amount: 3800, date: '2024-11' },
+            { id: 'default-2', amount: 3800, date: '2025-10' },
+            { id: 'default-3', amount: 3800, date: '2025-10' },
+            { id: 'default-4', amount: 3800, date: '2025-10' },
+            { id: 'default-5', amount: 3800, date: '2025-10' }
+        ]
+    };
+
+    @State() paymentRecords: { id: string; amount: number; date: string }[] = [];
 
     componentWillLoad() {
-        // Load loan data from localStorage
-        const storedLoanData = localStorage.getItem('currentLoanData');
-        if (storedLoanData) {
-            try {
-                this.currentLoanData = JSON.parse(storedLoanData);
-            } catch (e) {
-                console.error('Failed to parse stored loan data:', e);
-            }
-        }
+        // Always load/persist the combined object; legacy separate keys no longer used.
+        this.data = loadFromLocalStorage<AmortizationCalculatorData>(
+            STORAGE_KEYS.AMORTIZATION_DATA,
+            this.data
+        );
+    }
 
-        // Load amortization entries from localStorage
-        const storedEntries = localStorage.getItem('amortizationEntries');
-        if (storedEntries) {
-            try {
-                this.amortizationEntries = JSON.parse(storedEntries);
-            } catch (e) {
-                console.error('Failed to parse stored amortization entries:', e);
-            }
-        }
+    private persistAll() {
+        saveToLocalStorage(STORAGE_KEYS.AMORTIZATION_DATA, this.data);
     }
 
     private handleFormSubmit = (event: CustomEvent<LoanFormData>) => {
         const formData = event.detail;
-        this.currentLoanData = formData;
-        // Save to localStorage
-        localStorage.setItem('currentLoanData', JSON.stringify(formData));
+        this.data = { ...this.data, currentLoanData: formData };
+        this.persistAll();
     };
 
     private handleAddEntry = (event: CustomEvent<AmortizationData>) => {
         const entry = event.detail;
-        this.amortizationEntries = [...this.amortizationEntries, entry];
-        // Save to localStorage
-        localStorage.setItem('amortizationEntries', JSON.stringify(this.amortizationEntries));
+        this.data = { ...this.data, amortizationEntries: [...this.data.amortizationEntries, entry] };
+        this.persistAll();
     };
 
     private handleDeleteEntry = (event: CustomEvent<string>) => {
         const id = event.detail;
-        this.amortizationEntries = [...this.amortizationEntries.filter(entry => entry.id !== id)];
-        // Save to localStorage
-        localStorage.setItem('amortizationEntries', JSON.stringify(this.amortizationEntries));
+        this.data = { ...this.data, amortizationEntries: this.data.amortizationEntries.filter(entry => entry.id !== id) };
+        this.persistAll();
     };
 
-    private handleFormValidityChange = (_event: CustomEvent<boolean>) => {
-        // Form validity tracking
-    };
+    // private handlePaymentRecordSubmit = (event: CustomEvent<PaymentBreakdownData>) => {
+    //     const d = event.detail;
+    //     const amount = (d.principal || 0) + (d.additionalPrincipal || 0) + (d.interest || 0) + (d.escrow || 0) + (d.additionalEscrow || 0) + (d.feesAndCharges || 0);
+    //     const id = `pr-${Date.now()}`;
+    //     const date = d.date || '';
+    //     this.paymentRecords = [...this.paymentRecords, { id, amount, date }];
+    // };
+
+    // private handleDeletePaymentRecord = (event: CustomEvent<string>) => {
+    //     const id = event.detail;
+    //     this.paymentRecords = this.paymentRecords.filter(r => r.id !== id);
+    // };
 
     render() {
         return (
-            <div>
+            <div class="two-row-layout">
                 <div class="loan-amortization-calculator">
+                    <div class="content-container">
+                        <div class="calculator-section">
+                            <loan-calculator
+                                initialFormData={this.data.currentLoanData}
+                                hideAdditionalPrincipal={true}
+                                onFormSubmit={this.handleFormSubmit}
+                            />
+                        </div>
+                        <div class="amortization-section">
+                            <amortization-entry-form
+                                entries={this.data.amortizationEntries}
+                                onAddEntry={this.handleAddEntry}
+                                onDeleteEntry={this.handleDeleteEntry}
+                            />
+                        </div>
+                    </div>
                     <div>
-                        <h2>Loan Details</h2>
-                        <div class="content-container">
-                            <div class="calculator-section">
-                                <loan-calculator
-                                    initialFormData={this.currentLoanData}
-                                    hideAdditionalPrincipal={true}
-                                    onFormValidityChange={this.handleFormValidityChange}
-                                    onFormSubmit={this.handleFormSubmit}
-                                />
-                            </div>
-
-                            <div class="amortization-section">
-                                <h2>Amortization Entries</h2>
-                                <amortization-entry onAddEntry={this.handleAddEntry} />
-                                <amortization-list
-                                    entries={this.amortizationEntries}
-                                    onDeleteEntry={this.handleDeleteEntry}
-                                />
-                            </div>
+                        <div class="payment-breakdown-section">
+                            <payment-breakdown-input></payment-breakdown-input>
                         </div>
                     </div>
                 </div>
-                <amortization-schedule-with-additional
-                    loanData={this.currentLoanData}
-                    amortizationEntries={this.amortizationEntries}
-                />
+                <div class="amortization-schedule-section">
+                    <amortization-schedule-with-additional
+                        loanData={this.data.currentLoanData}
+                        amortizationEntries={this.data.amortizationEntries}
+                    />
+                </div>
             </div>
         );
     }
