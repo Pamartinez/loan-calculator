@@ -1,6 +1,6 @@
 import { Component, h, Prop, Element } from '@stencil/core';
-import { LoanFormData, AmortizationData } from '../../../data/models';
-import { calculateAmortization } from '../../../utils/amortization';
+import { AmortizationCalculatorData } from '../../../utils/amortization';
+import { getAmortizationSchedules } from '../../../utils/amortization';
 import { formatCurrency } from '../../../utils/utils';
 
 @Component({
@@ -9,14 +9,16 @@ import { formatCurrency } from '../../../utils/utils';
   shadow: true,
 })
 export class SavingsComparisonGraph {
-  @Prop() loanData: LoanFormData;
-  @Prop() amortizationEntries: AmortizationData[] = [];
+  @Prop() amortizationCalculatorData: AmortizationCalculatorData;
+
   @Element() el: HTMLElement;
 
   private canvasRef: HTMLCanvasElement;
   private resizeObserver: ResizeObserver;
+  private amortizationSchedules: { standardSchedule: any[]; withAdditionalSchedule: any[] } | null = null;
 
   componentDidLoad() {
+    this.amortizationSchedules = getAmortizationSchedules(this.amortizationCalculatorData);
     this.drawGraph();
 
     this.resizeObserver = new ResizeObserver(() => {
@@ -35,11 +37,19 @@ export class SavingsComparisonGraph {
   }
 
   componentDidUpdate() {
+    this.amortizationSchedules = getAmortizationSchedules(this.amortizationCalculatorData);
     this.drawGraph();
   }
 
+
+  private isValidData(): boolean {
+    const data = this.amortizationCalculatorData;
+    return !!(data && data.loanData && data.loanData.additionalPrincipal && data.loanData.additionalPrincipal !== 0);
+  }
+
+
   private drawGraph() {
-    if (!this.canvasRef || !this.loanData || !this.loanData.additionalPrincipal) {
+    if (!this.canvasRef || !this.isValidData()) {
       return;
     }
 
@@ -63,9 +73,11 @@ export class SavingsComparisonGraph {
 
     ctx.clearRect(0, 0, width, height);
 
-    // Calculate data
-    const standardSchedule = calculateAmortization({ ...this.loanData, additionalPrincipal: 0 }, []);
-    const withAdditionalSchedule = calculateAmortization(this.loanData, this.amortizationEntries);
+    // Calculate data using getAmortizationSchedules
+    if (!this.amortizationSchedules) {
+      this.amortizationSchedules = getAmortizationSchedules(this.amortizationCalculatorData);
+    }
+    const { standardSchedule, withAdditionalSchedule } = this.amortizationSchedules;
 
     const standardInterest = standardSchedule.reduce((sum, row) => sum + row.interest, 0);
     const withAdditionalInterest = withAdditionalSchedule.reduce((sum, row) => sum + row.interest, 0);
@@ -282,12 +294,14 @@ export class SavingsComparisonGraph {
   }
 
   render() {
-    if (!this.loanData || !this.loanData.additionalPrincipal || this.loanData.additionalPrincipal === 0) {
+    if (!this.isValidData()) {
       return null;
     }
 
-    const standardSchedule = calculateAmortization({ ...this.loanData, additionalPrincipal: 0 }, []);
-    const withAdditionalSchedule = calculateAmortization(this.loanData, this.amortizationEntries);
+    if (!this.amortizationSchedules) {
+      this.amortizationSchedules = getAmortizationSchedules(this.amortizationCalculatorData);
+    }
+    const { standardSchedule, withAdditionalSchedule } = this.amortizationSchedules;
     const standardInterest = standardSchedule.reduce((sum, row) => sum + row.interest, 0);
     const withAdditionalInterest = withAdditionalSchedule.reduce((sum, row) => sum + row.interest, 0);
     const interestSaved = standardInterest - withAdditionalInterest;

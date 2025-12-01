@@ -4,13 +4,13 @@ import { chevronUp, chevronDown } from '../../svg';
 import { formatCurrency } from '../../utils/utils';
 
 export interface PaymentBreakdownData {
-    principal: number;
-    additionalPrincipal: number;
-    interest: number;
-    escrow: number;
-    additionalEscrow: number;
-    feesAndCharges: number;
-    date: string; // YYYY-MM
+    principal?: number;
+    additionalPrincipal?: number;
+    interest?: number;
+    escrow?: number;
+    additionalEscrow?: number;
+    feesAndCharges?: number;
+    date?: string; // YYYY-MM
 }
 
 @Component({
@@ -19,133 +19,62 @@ export interface PaymentBreakdownData {
     shadow: true,
 })
 export class PaymentBreakdownInput {
+
+    @State() initialData: PaymentBreakdownData = {
+        "date": "2025-11",
+        "principal": 481.66,
+        "additionalPrincipal": 0.00,
+        "interest": 2671.87,
+        "escrow": 739.92,
+        "additionalEscrow": 0.00,
+        "feesAndCharges": 0.00
+    };
+    @Prop() paymentRecords?: PaymentBreakdownData[] = [];
+    @Event() paymentChange!: EventEmitter<PaymentBreakdownData[]>;
+    @State() isValid: boolean = true;
     @State() expandedIdx: number | null = null;
 
-    @Prop() initialData?: Partial<PaymentBreakdownData>;
-    @Event() paymentChange!: EventEmitter<PaymentBreakdownData>;
-    @Event() customSubmit!: EventEmitter<PaymentBreakdownData>;
-    @State() isValid: boolean = true;
-
-    @State() data: PaymentBreakdownData = {
-        principal: 481.66,
-        additionalPrincipal: 0,
-        interest: 2671.87,
-        escrow: 739.92,
-        additionalEscrow: 0,
-        feesAndCharges: 0,
-        date: '',
-    };
-
-    @State() fakePaymentBreakdownList: PaymentBreakdownData[] = [
-        {
-            principal: 500,
-            additionalPrincipal: 50,
-            interest: 2500,
-            escrow: 700,
-            additionalEscrow: 20,
-            feesAndCharges: 10,
-            date: '2024-01',
-        },
-        {
-            principal: 510,
-            additionalPrincipal: 40,
-            interest: 2490,
-            escrow: 710,
-            additionalEscrow: 25,
-            feesAndCharges: 15,
-            date: '2024-02',
-        },
-        {
-            principal: 520,
-            additionalPrincipal: 30,
-            interest: 2480,
-            escrow: 720,
-            additionalEscrow: 30,
-            feesAndCharges: 20,
-            date: '2024-03',
-        },
-        {
-            principal: 530,
-            additionalPrincipal: 20,
-            interest: 2470,
-            escrow: 730,
-            additionalEscrow: 35,
-            feesAndCharges: 25,
-            date: '2024-04',
-        },
-        {
-            principal: 540,
-            additionalPrincipal: 10,
-            interest: 2460,
-            escrow: 740,
-            additionalEscrow: 40,
-            feesAndCharges: 30,
-            date: '2024-05',
-        },
-        {
-            principal: 550,
-            additionalPrincipal: 0,
-            interest: 2450,
-            escrow: 750,
-            additionalEscrow: 45,
-            feesAndCharges: 35,
-            date: '2024-06',
-        },
-        {
-            principal: 560,
-            additionalPrincipal: 5,
-            interest: 2440,
-            escrow: 760,
-            additionalEscrow: 50,
-            feesAndCharges: 40,
-            date: '2024-07',
-        },
-        {
-            principal: 570,
-            additionalPrincipal: 15,
-            interest: 2430,
-            escrow: 770,
-            additionalEscrow: 55,
-            feesAndCharges: 45,
-            date: '2024-08',
-        },
-        {
-            principal: 580,
-            additionalPrincipal: 25,
-            interest: 2420,
-            escrow: 780,
-            additionalEscrow: 60,
-            feesAndCharges: 50,
-            date: '2024-09',
-        },
-        {
-            principal: 590,
-            additionalPrincipal: 35,
-            interest: 2410,
-            escrow: 790,
-            additionalEscrow: 65,
-            feesAndCharges: 55,
-            date: '2024-10',
-        },
-    ];
 
     private inputRefs: (HTMLNumericInputElement)[] = [];
 
-    componentWillLoad() {
-        if (this.initialData) {
-            this.data = { ...this.data, ...this.initialData };
-        }
-    }
-
     private updateField = (key: keyof PaymentBreakdownData, value: number | string) => {
-        this.data = { ...this.data, [key]: value as any };
-        this.paymentChange.emit(this.data);
         this.validateAllInputs();
+        this.initialData = { ...this.initialData, [key]: value as any };
     };
+
+    private handleDeleteItem(ev: CustomEvent<number>) {
+        const items = this.getItems();
+        const index = ev.detail;
+        if (index >= 0 && index < items.length) {
+            // Remove the item at the given index
+            const next = items.filter((_, i) => i !== index);
+            this.paymentRecords = next;
+            // Optionally collapse expandedIdx if deleted
+            if (this.expandedIdx === index) {
+                this.expandedIdx = null;
+            } else if (this.expandedIdx && this.expandedIdx > index) {
+                this.expandedIdx = this.expandedIdx - 1;
+            }
+        }
+
+        this.paymentChange.emit(this.paymentRecords);
+    }
 
     private handleSubmit = () => {
         if (this.isValid) {
-            this.customSubmit.emit(this.data);
+            // Add current initialData to paymentRecords
+            this.paymentRecords = [...(this.paymentRecords || []), { ...this.initialData }];
+            this.paymentChange.emit(this.paymentRecords);
+
+            this.initialData = {
+                "date": '',
+                "principal": null,
+                "additionalPrincipal": 0.00,
+                "interest": null,
+                "escrow": null,
+                "additionalEscrow": 0.00,
+                "feesAndCharges": 0.00
+            }
         }
     };
 
@@ -166,7 +95,7 @@ export class PaymentBreakdownInput {
         if (!dateStr) return '';
         const [year, month] = dateStr.split('-');
         // Use 1st of month for demo
-        return `${parseInt(month, 10)}/1/${year}`;
+        return `${parseInt(month, 10)}/${year}`;
     }
 
     private renderNumberInput(
@@ -184,7 +113,7 @@ export class PaymentBreakdownInput {
                                 this.inputRefs.push(el);
                             }
                         }}
-                        value={this.data[key] as number}
+                        value={this.initialData?.[key] as number}
                         propertyName={key as string}
                         numericInputType={numericInputType} numberOfDecimalsAllowed={2}
                         onValueChange={(e) => this.updateField(key, e.detail)}
@@ -205,8 +134,21 @@ export class PaymentBreakdownInput {
         );
     }
 
-    render() {
+    private getItems(): PaymentBreakdownData[] {
+        const items = Array.isArray(this.paymentRecords) ? this.paymentRecords : [];
+        // Sort by date ascending (oldest at the end)
+        return items.slice().sort((a, b) => {
+            if (!a.date) return 1;
+            if (!b.date) return -1;
+            // Convert YYYY-MM to Date for comparison
+            const dateA = new Date(a.date + '-01');
+            const dateB = new Date(b.date + '-01');
+            return dateB.getTime() - dateA.getTime(); // newest first, oldest last
+        });
+    }
 
+    render() {
+        const items = this.getItems();
         return (
             <div class="card two-row-layout">
                 <div class="content-container">
@@ -232,7 +174,7 @@ export class PaymentBreakdownInput {
                                         <div class="input-wrapper">
                                             <date-input
                                                 style={{ '--input-width': '150px' }}
-                                                value={this.data.date}
+                                                value={this.initialData?.date || ''}
                                                 onDateChange={(e) => this.updateField('date', e.detail as string)}
                                             />
                                         </div>
@@ -246,14 +188,14 @@ export class PaymentBreakdownInput {
                     </div>
                     <div class="list-container">
                         <component-list style={{ "--container-height": "357px" }}
-                            items={this.fakePaymentBreakdownList.map((item, idx) => {
+                            items={items.map((item, idx) => {
                                 const isOpen = this.expandedIdx === idx;
                                 return (
                                     <div key={idx}>
                                         <div class="payment-summary" onClick={() => this.toggleExpand(idx)} style={{ cursor: 'pointer' }}>
                                             <span class="arrow" innerHTML={isOpen ? chevronUp : chevronDown}>
                                             </span>
-                                            <span class="amount">${item.principal + item.additionalPrincipal + item.interest + item.escrow + item.additionalEscrow + item.feesAndCharges}.00</span>
+                                            <span class="amount">{formatCurrency(item.principal + item.additionalPrincipal + item.interest + item.escrow + item.additionalEscrow + item.feesAndCharges)}</span>
                                             <span class="date">{this.formatDate(item.date)}</span>
                                         </div>
                                         {isOpen && (
@@ -268,8 +210,8 @@ export class PaymentBreakdownInput {
                                         )}
                                     </div>
                                 );
-                            })}>
-
+                            })}
+                            onDeleteItem={this.handleDeleteItem.bind(this)}>
                         </component-list>
                     </div>
                 </div>

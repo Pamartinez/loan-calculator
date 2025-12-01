@@ -1,6 +1,6 @@
 import { Component, h, Prop, Event, EventEmitter, State, Method } from '@stencil/core';
 import { NumericInputTypeEnum } from '../../../data/models';
-import { getCurrencySymbol } from '../../../utils/utils';
+import { formatNumber, getCurrencySymbol } from '../../../utils/utils';
 
 @Component({
     tag: 'numeric-input',
@@ -134,7 +134,7 @@ export class NumericInput {
             const limitedDecimal = decimalPart.substring(0, this.numberOfDecimalsAllowed);
             return `${wholePart === '' ? '0' : this.addFormatting(wholePart)}.${limitedDecimal}`;
         }
-        if (this.isNumber(wholePart, allowNegative)) {
+        else if (this.isNumber(wholePart, allowNegative)) {
             return this.addFormatting(wholePart);
         }
         return value;
@@ -144,7 +144,7 @@ export class NumericInput {
         if (!value) return '';
         const num = Number(value.replace(/,/g, ''));
         if (isNaN(num)) return value;
-        return num.toLocaleString('en-US');
+        return formatNumber(num);
     }
 
     private isNumber(num: string, allowNegative = false): boolean {
@@ -157,18 +157,18 @@ export class NumericInput {
         // Remove formatting
         value = this.removeFormatting(value);
         // Split into whole and decimal parts
-        let [wholePart, decimalPart] = value.split('.');
-        let formattedValue = '';
-        if (this.numericInputType !== NumericInputTypeEnum.Integer && decimalPart !== undefined) {
-            // Enforce decimal limit during typing
-            decimalPart = decimalPart.substring(0, this.numberOfDecimalsAllowed);
-            formattedValue = `${wholePart === '' ? '0' : this.formatInput(wholePart)}.${decimalPart}`;
-            value = `${wholePart}.${decimalPart}`;
-        } else {
-            formattedValue = this.formatInput(value);
-        }
+        // let [wholePart, decimalPart] = value.split('.');
+        // let formattedValue = '';
+        // if (this.numericInputType !== NumericInputTypeEnum.Integer && decimalPart !== undefined) {
+        //     // Enforce decimal limit during typing
+        //     //decimalPart = decimalPart.substring(0, this.numberOfDecimalsAllowed);  
+        //     //formattedValue = `${wholePart === '' ? '0' : this.formatInput(wholePart)}.${decimalPart}`;
+        //     //value = `${wholePart}.${decimalPart}`;
+        // } else {
+        //     formattedValue = this.formatInput(value);
+        // }
 
-        input.value = formattedValue;
+        input.value = this.formatInput(value);;
         if (value === '.') return;
         if (await this.validateInput()) {
             this.value = Number(value);

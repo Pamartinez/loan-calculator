@@ -1,6 +1,5 @@
 import { Component, h, Prop } from '@stencil/core';
-import { LoanFormData, AmortizationData } from '../../../data/models';
-import { calculateAmortization } from '../../../utils/amortization';
+import { LoanFormData, AmortizationRow } from '../../../data/models';
 import { formatCurrency } from '../../../utils/utils';
 
 @Component({
@@ -10,14 +9,15 @@ import { formatCurrency } from '../../../utils/utils';
 })
 export class PayoffProgress {
   @Prop() loanData: LoanFormData;
-  @Prop() amortizationEntries: AmortizationData[] = [];
+  @Prop() schedule: AmortizationRow[] = [];
   private calculateProgress() {
-    if (!this.loanData || !this.loanData.loanAmount || !this.loanData.startDate) {
+    if (!this.loanData || !this.loanData.loanAmount || !this.loanData.startDate || this.schedule.length === 0) {
       return null;
     }
 
-    const schedule = calculateAmortization(this.loanData, this.amortizationEntries);
+    const schedule = this.schedule;
     const totalYears = schedule.length;
+
     // Calculate years passed
     const startDate = new Date(this.loanData.startDate);
     const current = new Date();
@@ -27,7 +27,7 @@ export class PayoffProgress {
     // Clamp to 0 so future start dates report 0% progress instead of breaking.
     const yearsPassed = Math.max(yearsPassedRaw, 0);
 
-    const percentComplete = Math.min(Math.max((yearsPassed / totalYears) * 100, 0), 100);
+    const percentComplete = 9.3;//Math.min(Math.max((yearsPassed / totalYears) * 100, 0), 100);
     const yearsRemaining = Math.max(totalYears - yearsPassed, 0);
 
     // Calculate actual amount paid from schedule
@@ -107,6 +107,17 @@ export class PayoffProgress {
             <span class="progress-text">{progress.percentComplete.toFixed(1)}%</span>
           </div>
         </div>
+
+        {/* <div class="progress-bar-container">
+          <div class="progress-bar">
+            <progress
+              id="file"
+              max={100}
+              value={progress.percentComplete}
+            >{progress.percentComplete.toFixed(1)}%</progress>
+            <span class="progress-text">{progress.percentComplete.toFixed(1)}%</span>
+          </div>
+        </div> */}
 
         <div class="milestones">
           {progress.milestones.map((milestone) => (

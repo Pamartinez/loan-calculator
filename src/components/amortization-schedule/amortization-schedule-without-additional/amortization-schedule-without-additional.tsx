@@ -1,5 +1,6 @@
 import { Component, h, Prop, State, Watch } from '@stencil/core';
 import { LoanFormData } from '../../../data/models';
+import { AmortizationCalculatorData } from '../../../utils/amortization';
 
 @Component({
   tag: 'amortization-schedule-without-additional',
@@ -9,7 +10,7 @@ import { LoanFormData } from '../../../data/models';
 export class AmortizationScheduleWithoutAdditional {
   @Prop() loanData: LoanFormData;
 
-  @State() loanDataWithoutAdditional: LoanFormData;
+  @State() amortizationCalculatorData: AmortizationCalculatorData;
 
   componentWillLoad() {
     this.calculateSchedule();
@@ -24,12 +25,16 @@ export class AmortizationScheduleWithoutAdditional {
     if (!this.loanData || !this.loanData.loanAmount || !this.loanData.rate || !this.loanData.totalMonthlyPayment || !this.loanData.startDate) {
       return;
     }
-    this.loanDataWithoutAdditional = { ...this.loanData, additionalPrincipal: 0 };
+    this.amortizationCalculatorData = {
+      loanData: { ...this.loanData, additionalPrincipal: 0 },
+      amortizationEntries: [],
+      paymentRecords: []
+    };
   }
 
   render() {
     return (
-      <amortization-schedule-base loanData={this.loanDataWithoutAdditional} />
+      <amortization-schedule-base amortizationCalculatorData={this.amortizationCalculatorData} />
     );
   }
 }

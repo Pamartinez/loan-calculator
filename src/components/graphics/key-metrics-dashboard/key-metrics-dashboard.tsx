@@ -22,11 +22,12 @@ export class KeyMetricsDashboard {
   }
 
   private calculateMetrics() {
+
     if (!this.loanData || !this.loanData.loanAmount) {
       return null;
     }
 
-    const standardSchedule = calculateAmortization({ ...this.loanData, additionalPrincipal: 0 }, []);
+    const standardSchedule = calculateAmortization({ loanData: { ...this.loanData, additionalPrincipal: 0 }, amortizationEntries: [], paymentRecords: [] });
     const activeSchedule = this.schedule.length > 0 ? this.schedule : standardSchedule;
 
     const totalInterestStandard = standardSchedule.reduce((sum, row) => sum + row.interest, 0);
@@ -87,6 +88,7 @@ export class KeyMetricsDashboard {
   }
 
   render() {
+
     const metrics = this.calculateMetrics();
 
     if (!metrics) {

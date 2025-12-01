@@ -34,10 +34,16 @@ export class LoanSummary {
       }
     ];
 
+    const amortizationCalculatorData = {
+      loanData: this.loanData,
+      amortizationEntries: [],
+      paymentRecords: []
+    };
+
     if (this.loanData?.additionalPrincipal && this.loanData.additionalPrincipal > 0) {
       tabs.push({
         name: 'Loan with Additional Principal',
-        content: <amortization-schedule-with-additional loanData={this.loanData} />
+        content: <amortization-schedule-with-additional amortizationCalculatorData={amortizationCalculatorData} />
       });
     }
 

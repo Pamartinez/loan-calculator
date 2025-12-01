@@ -1,6 +1,6 @@
 import { Component, h, Prop, State, Watch } from '@stencil/core';
-import { AmortizationRow, LoanFormData, AmortizationData } from '../../../data/models';
-import { calculateAmortization } from '../../../utils/amortization';
+import { AmortizationRow } from '../../../data/models';
+import { calculateAmortization, AmortizationCalculatorData } from '../../../utils/amortization';
 
 @Component({
     tag: 'amortization-schedule-base',
@@ -8,9 +8,7 @@ import { calculateAmortization } from '../../../utils/amortization';
     shadow: true,
 })
 export class AmortizationScheduleBase {
-    @Prop() loanData: LoanFormData;
-    @Prop() amortizationEntries: AmortizationData[] = [];
-
+    @Prop() amortizationCalculatorData: AmortizationCalculatorData;
     @State() amortizationSchedule: AmortizationRow[] = [];
 
     componentWillLoad() {
@@ -28,20 +26,19 @@ export class AmortizationScheduleBase {
     }
 
     private calculateSchedule() {
-        if (!this.loanData || !this.loanData.loanAmount || !this.loanData.rate || !this.loanData.totalMonthlyPayment || !this.loanData.startDate) {
+        if (!this.amortizationCalculatorData || !this.amortizationCalculatorData.loanData || !this.amortizationCalculatorData.loanData.loanAmount || !this.amortizationCalculatorData.loanData.rate || !this.amortizationCalculatorData.loanData.totalMonthlyPayment || !this.amortizationCalculatorData.loanData.startDate) {
             return;
         }
-
-        this.amortizationSchedule = calculateAmortization(this.loanData, this.amortizationEntries);
+        this.amortizationSchedule = calculateAmortization(this.amortizationCalculatorData);
     }
 
     render() {
         return (
             <div >
                 <schedule-summary schedule={this.amortizationSchedule} />
-                <key-metrics-dashboard loanData={this.loanData} schedule={this.amortizationSchedule} />
-                <payoff-progress loanData={this.loanData} amortizationEntries={this.amortizationEntries} />
-                <savings-comparison-graph loanData={this.loanData} amortizationEntries={this.amortizationEntries} />
+                <key-metrics-dashboard loanData={this.amortizationCalculatorData.loanData} schedule={this.amortizationSchedule} />
+                <payoff-progress loanData={this.amortizationCalculatorData.loanData} schedule={this.amortizationSchedule} />
+                <savings-comparison-graph amortizationCalculatorData={this.amortizationCalculatorData} />
                 <pie-chart schedule={this.amortizationSchedule} />
                 <cumulative-payment-graph schedule={this.amortizationSchedule} />
                 <balance-graph schedule={this.amortizationSchedule} />

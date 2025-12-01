@@ -27,6 +27,11 @@ export class LoanReport {
 
         {Object.keys(this.loanDataDictionary).map((key) => {
           const loanData = this.loanDataDictionary[key];
+          const amortizationCalculatorData = {
+            loanData: loanData,
+            amortizationEntries: [],
+            paymentRecords: []
+          }
 
           return (
             <div class="loan-section">
@@ -42,7 +47,7 @@ export class LoanReport {
               {loanData.additionalPrincipal > 0 && (
                 <div class="schedule-section page-break">
                   <h3 class="schedule-title">With Additional Principal Payment</h3>
-                  <amortization-schedule-with-additional loanData={loanData} />
+                  <amortization-schedule-with-additional amortizationCalculatorData={amortizationCalculatorData} />
                 </div>
               )}
             </div>

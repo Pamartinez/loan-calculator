@@ -1,5 +1,5 @@
 import { Component, h, Prop } from '@stencil/core';
-import { LoanFormData, AmortizationData } from '../../../data/models';
+import { AmortizationCalculatorData } from '../../../utils/amortization';
 
 @Component({
   tag: 'amortization-schedule-with-additional',
@@ -7,21 +7,17 @@ import { LoanFormData, AmortizationData } from '../../../data/models';
   shadow: true,
 })
 export class AmortizationScheduleWithAdditional {
-  @Prop() loanData: LoanFormData;
-  @Prop() amortizationEntries: AmortizationData[] = [];
+  @Prop() amortizationCalculatorData: AmortizationCalculatorData;
 
   render() {
     return (
-      <div >
+      <div>
         <amortization-schedule-base
-          loanData={this.loanData}
-          amortizationEntries={this.amortizationEntries}
-          style={{
-            '--bar-interest': '#d4edda',
-            '--bar-interest-hover': '#b8dcc4',
-            '--bar-principal': '#28a745',
-            '--bar-principal-hover': '#218838'
-          }}
+          amortizationCalculatorData={this.amortizationCalculatorData}
+        // style={{
+        //   '--bar-principal': '#28a745',
+        //   '--bar-principal-hover': '#218838'
+        // }}
         />
       </div>
     );

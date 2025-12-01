@@ -12,9 +12,7 @@ export class AmortizationEntry {
   @State() date: string = '';
   @State() inputsValid: boolean = false;
   @Prop() entries?: AmortizationData[];
-  @Event() updateEntries: EventEmitter<AmortizationData[]>; // retained for backward compatibility
-  @Event() addEntry: EventEmitter<AmortizationData>;
-  @Event() deleteEntry: EventEmitter<string>;
+  @Event() updateEntries: EventEmitter<AmortizationData[]>;
   private numberInputRef?: any; // Expect component with validateInput()
   private dateInputRef?: any;   // Expect component with validateInput()
   private inputRefs: any[] = [];
@@ -53,16 +51,28 @@ export class AmortizationEntry {
         id
       };
       const current = Array.isArray(this.entries) ? this.entries : [];
-      const next = [...current, entry];
-      // Emit both granular add and the full list for any listener styles
-      this.addEntry.emit(entry);
-      this.updateEntries.emit(next);
+      this.entries = [...current, entry];
+      this.updateEntries.emit(this.entries);
       // Reset fields
       this.amount = null;
       this.date = '';
       this.inputsValid = false;
     }
   };
+
+
+
+  private handleDeleteIndex(ev: CustomEvent<number>) {
+    const items = this.getItems();
+    const index = ev.detail;
+    if (index >= 0 && index < items.length) {
+      // Also emit full list minus deleted for legacy listeners
+      const next = items.filter((_, i) => i !== index);
+
+      this.entries = next;
+    }
+    this.updateEntries.emit(this.entries);
+  }
 
   private formatDate = (dateString: string): string => {
     if (!dateString) return '';
@@ -82,19 +92,13 @@ export class AmortizationEntry {
     }
   }
 
+  private getItems(): AmortizationData[] {
+    return Array.isArray(this.entries) ? this.entries : [];
+  }
+
   render() {
     const isValid = typeof this.amount === 'number' && this.amount > 0 && !!this.date && this.inputsValid;
-    const items = Array.isArray(this.entries) ? this.entries : [];
-    const handleDeleteIndex = (ev: CustomEvent<number>) => {
-      const index = ev.detail;
-      if (index >= 0 && index < items.length) {
-        const id = items[index].id;
-        this.deleteEntry.emit(id);
-        // Also emit full list minus deleted for legacy listeners
-        const next = items.filter((_, i) => i !== index);
-        this.updateEntries.emit(next);
-      }
-    };
+    const items = this.getItems();
 
     return (
       <div class="card">
@@ -123,13 +127,15 @@ export class AmortizationEntry {
                   />
                 </div>
                 <div class="column">
-                  <button
-                    class="button-style add-button"
-                    onClick={this.handleAdd}
-                    disabled={!isValid}
-                  >
-                    Add
-                  </button>
+                  <div>
+                    <button
+                      class="button-style-add"
+                      onClick={this.handleAdd}
+                      disabled={!isValid}
+                    >
+                      Add
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -144,7 +150,7 @@ export class AmortizationEntry {
               </div>
             ))}
             emptyMessage="No amortization entries added yet."
-            onDeleteItem={handleDeleteIndex}
+            onDeleteItem={this.handleDeleteIndex.bind(this)}
           ></component-list>
         </div>
       </div>

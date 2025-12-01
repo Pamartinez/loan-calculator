@@ -127,26 +127,27 @@ export class LoanCalculator {
                 <h2>Loan Details</h2>
                 {/* Unified Grid Layout */}
                 <div class="form-grid">
-                    <div class="row full-width">
-                        <div class="column">
-                            <label htmlFor="displayName">Display Name</label>
-                            <div class="input-wrapper">
-                                <text-input
-                                    ref={el => {
-                                        if (el && !this.inputRefs.includes(el)) {
-                                            this.inputRefs.push(el);
-                                        }
-                                    }}
-                                    value={this.formData.displayName}
-                                    propertyName="displayName"
-                                    disabled={this.isEditMode}
-                                    onValueChange={(e) => this.handleValueChange('displayName', e.detail.value)}
-                                />
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="form-row-columns">
+
+                        <div class="row full-width">
+                            <div class="column">
+                                <label htmlFor="displayName">Display Name</label>
+                                <div class="input-wrapper">
+                                    <text-input
+                                        ref={el => {
+                                            if (el && !this.inputRefs.includes(el)) {
+                                                this.inputRefs.push(el);
+                                            }
+                                        }}
+                                        value={this.formData.displayName}
+                                        propertyName="displayName"
+                                        disabled={this.isEditMode}
+                                        onValueChange={(e) => this.handleValueChange('displayName', e.detail.value)}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             {this.renderNumberInput('Loan Amount', 'loanAmount')}
                             {this.renderNumberInput('Rate', 'rate', NumericInputTypeEnum.Percentage)}
@@ -159,14 +160,14 @@ export class LoanCalculator {
                             {!this.hideAdditionalPrincipal && this.renderNumberInput('Additional Principal', 'additionalPrincipal')}
                             <div class="column">
                                 <label htmlFor="loanTerms">Loan Terms</label>
-                                <div class="input-wrapper flex-column" style={{ width: '159px' }}>
+                                <div class="input-wrapper flex_column" style={{ width: '141px' }}>
                                     <numeric-input
                                         ref={el => {
                                             if (el && !this.inputRefs.includes(el)) {
                                                 this.inputRefs.push(el);
                                             }
                                         }}
-                                        style={{ '--input-width': '80px', marginRight: '8px' }}
+                                        style={{ '--input-width': '80px', }}
                                         value={this.formData.loanTermsTime}
                                         propertyName="loanTermsTime"
                                         numericInputType={NumericInputTypeEnum.Integer}
@@ -176,7 +177,7 @@ export class LoanCalculator {
                                     <select
                                         class="input-style"
                                         onInput={(e) => this.handleValueChange('loanTermsType', (e.target as HTMLSelectElement).value)}
-                                        style={{ width: '170px' }}
+                                        style={{ width: '160px' }}
                                     >
                                         <option value="years" selected={this.formData.loanTermsType === 'years'}>Years</option>
                                         <option value="months" selected={this.formData.loanTermsType === 'months'}>Months</option>

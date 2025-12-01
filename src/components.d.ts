@@ -6,9 +6,11 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AmortizationData, AmortizationRow, LoanFormData, NumericInputTypeEnum } from "./data/models";
+import { AmortizationCalculatorData } from "./utils/amortization";
 import { PaymentBreakdownData } from "./components/payment-breakdown-input/payment-breakdown-input";
 import { TabItem } from "./components/tabs-controller/tabs-controller";
 export { AmortizationData, AmortizationRow, LoanFormData, NumericInputTypeEnum } from "./data/models";
+export { AmortizationCalculatorData } from "./utils/amortization";
 export { PaymentBreakdownData } from "./components/payment-breakdown-input/payment-breakdown-input";
 export { TabItem } from "./components/tabs-controller/tabs-controller";
 export namespace Components {
@@ -22,18 +24,10 @@ export namespace Components {
         "schedule": AmortizationRow[];
     }
     interface AmortizationScheduleBase {
-        /**
-          * @default []
-         */
-        "amortizationEntries": AmortizationData[];
-        "loanData": LoanFormData;
+        "amortizationCalculatorData": AmortizationCalculatorData;
     }
     interface AmortizationScheduleWithAdditional {
-        /**
-          * @default []
-         */
-        "amortizationEntries": AmortizationData[];
-        "loanData": LoanFormData;
+        "amortizationCalculatorData": AmortizationCalculatorData;
     }
     interface AmortizationScheduleWithoutAdditional {
         "loanData": LoanFormData;
@@ -147,14 +141,17 @@ export namespace Components {
         "value": number;
     }
     interface PaymentBreakdownInput {
-        "initialData"?: Partial<PaymentBreakdownData>;
-    }
-    interface PayoffProgress {
         /**
           * @default []
          */
-        "amortizationEntries": AmortizationData[];
+        "paymentRecords"?: PaymentBreakdownData[];
+    }
+    interface PayoffProgress {
         "loanData": LoanFormData;
+        /**
+          * @default []
+         */
+        "schedule": AmortizationRow[];
     }
     interface PieChart {
         /**
@@ -170,11 +167,7 @@ export namespace Components {
         "modalTitle": string;
     }
     interface SavingsComparisonGraph {
-        /**
-          * @default []
-         */
-        "amortizationEntries": AmortizationData[];
-        "loanData": LoanFormData;
+        "amortizationCalculatorData": AmortizationCalculatorData;
     }
     interface ScheduleSummary {
         /**
@@ -274,8 +267,6 @@ export interface TextInputCustomEvent<T> extends CustomEvent<T> {
 declare global {
     interface HTMLAmortizationEntryFormElementEventMap {
         "updateEntries": AmortizationData[];
-        "addEntry": AmortizationData;
-        "deleteEntry": string;
     }
     interface HTMLAmortizationEntryFormElement extends Components.AmortizationEntryForm, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAmortizationEntryFormElementEventMap>(type: K, listener: (this: HTMLAmortizationEntryFormElement, ev: AmortizationEntryFormCustomEvent<HTMLAmortizationEntryFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -474,8 +465,7 @@ declare global {
         new (): HTMLNumericInputElement;
     };
     interface HTMLPaymentBreakdownInputElementEventMap {
-        "paymentChange": PaymentBreakdownData;
-        "customSubmit": PaymentBreakdownData;
+        "paymentChange": PaymentBreakdownData[];
     }
     interface HTMLPaymentBreakdownInputElement extends Components.PaymentBreakdownInput, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPaymentBreakdownInputElementEventMap>(type: K, listener: (this: HTMLPaymentBreakdownInputElement, ev: PaymentBreakdownInputCustomEvent<HTMLPaymentBreakdownInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -618,8 +608,6 @@ declare global {
 declare namespace LocalJSX {
     interface AmortizationEntryForm {
         "entries"?: AmortizationData[];
-        "onAddEntry"?: (event: AmortizationEntryFormCustomEvent<AmortizationData>) => void;
-        "onDeleteEntry"?: (event: AmortizationEntryFormCustomEvent<string>) => void;
         "onUpdateEntries"?: (event: AmortizationEntryFormCustomEvent<AmortizationData[]>) => void;
     }
     interface AmortizationSchedule {
@@ -629,18 +617,10 @@ declare namespace LocalJSX {
         "schedule"?: AmortizationRow[];
     }
     interface AmortizationScheduleBase {
-        /**
-          * @default []
-         */
-        "amortizationEntries"?: AmortizationData[];
-        "loanData"?: LoanFormData;
+        "amortizationCalculatorData"?: AmortizationCalculatorData;
     }
     interface AmortizationScheduleWithAdditional {
-        /**
-          * @default []
-         */
-        "amortizationEntries"?: AmortizationData[];
-        "loanData"?: LoanFormData;
+        "amortizationCalculatorData"?: AmortizationCalculatorData;
     }
     interface AmortizationScheduleWithoutAdditional {
         "loanData"?: LoanFormData;
@@ -759,16 +739,18 @@ declare namespace LocalJSX {
         "value"?: number;
     }
     interface PaymentBreakdownInput {
-        "initialData"?: Partial<PaymentBreakdownData>;
-        "onCustomSubmit"?: (event: PaymentBreakdownInputCustomEvent<PaymentBreakdownData>) => void;
-        "onPaymentChange"?: (event: PaymentBreakdownInputCustomEvent<PaymentBreakdownData>) => void;
-    }
-    interface PayoffProgress {
+        "onPaymentChange"?: (event: PaymentBreakdownInputCustomEvent<PaymentBreakdownData[]>) => void;
         /**
           * @default []
          */
-        "amortizationEntries"?: AmortizationData[];
+        "paymentRecords"?: PaymentBreakdownData[];
+    }
+    interface PayoffProgress {
         "loanData"?: LoanFormData;
+        /**
+          * @default []
+         */
+        "schedule"?: AmortizationRow[];
     }
     interface PieChart {
         /**
@@ -785,11 +767,7 @@ declare namespace LocalJSX {
         "onClosePopup"?: (event: PopupModalCustomEvent<void>) => void;
     }
     interface SavingsComparisonGraph {
-        /**
-          * @default []
-         */
-        "amortizationEntries"?: AmortizationData[];
-        "loanData"?: LoanFormData;
+        "amortizationCalculatorData"?: AmortizationCalculatorData;
     }
     interface ScheduleSummary {
         /**

@@ -19,22 +19,22 @@ export class LoanCalculatorMain {
           </div>
         ),
       },
-      {
-        name: 'Legacy Calculator',
-        content: (
-          <div class="tab-panel">
-            <loan-calculator-app></loan-calculator-app>
-          </div>
-        ),
-      },
-      {
-        name: 'Export/Import Data',
-        content: (
-          <div class="tab-panel">
-            <export-json-controller></export-json-controller>
-          </div>
-        ),
-      },
+      // {
+      //   name: 'Legacy Calculator',
+      //   content: (
+      //     <div class="tab-panel">
+      //       <loan-calculator-app></loan-calculator-app>
+      //     </div>
+      //   ),
+      // },
+      // {
+      //   name: 'Export/Import Data',
+      //   content: (
+      //     <div class="tab-panel">
+      //       <export-json-controller></export-json-controller>
+      //     </div>
+      //   ),
+      // },
     ];
   }
 

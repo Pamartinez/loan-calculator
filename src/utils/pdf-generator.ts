@@ -32,8 +32,7 @@ export async function generatePDFClientSide(loanDataDictionary: { [key: string]:
           body {
             margin: 0;
             padding: 20px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-          }
+           }
           @media print {
             body {
               padding: 0;

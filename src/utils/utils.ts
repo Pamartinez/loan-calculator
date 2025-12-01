@@ -16,6 +16,15 @@ export function formatCurrency(value: number, minimumFractionDigits: number = 2,
   }).format(value);
 }
 
+/**
+ * Formats a number using toLocaleString with 'en-US' locale.
+ * @param value The number to format.
+ * @returns The formatted string.
+ */
+export function formatNumber(value: number): string {
+  return value.toLocaleString('en-US');
+}
+
 
 /**
  * Gets the currency symbol for a given currency code
@@ -25,7 +34,7 @@ export function formatCurrency(value: number, minimumFractionDigits: number = 2,
  */
 export function getCurrencySymbol(currencyCode: string): string {
   // Use Intl.NumberFormat to format a value and extract the symbol
-  const formatted = new Intl.NumberFormat(undefined, {
+  const formatted = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currencyCode,
     minimumFractionDigits: 0,
